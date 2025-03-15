@@ -50,12 +50,12 @@ templates = Jinja2Templates(directory="templates")
 
 
 # Home page
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def home():
     return {"message": "Welcome to the Loan Prediction API!"}
 
 
-@app.get("/login")
+@app.get("/login", include_in_schema=False)
 async def login_page(request: Request):
     """
     Display the login page template.
@@ -109,7 +109,7 @@ async def login_for_access_token(
 
 
 # Render the loan prediction form using Jinja2 template
-@app.get("/index/", response_class=HTMLResponse)
+@app.get("/index/", response_class=HTMLResponse, include_in_schema=False)
 async def get_loan_prediction_form(request: Request):
     # Render the template with the necessary context
     return templates.TemplateResponse("index.html", {"request": request})
