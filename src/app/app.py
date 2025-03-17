@@ -6,6 +6,7 @@ import uuid
 from datetime import timedelta
 from typing import Union
 
+
 import database
 import pandas as pd
 import redis
@@ -56,12 +57,12 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 # Endpoint Home page
-@app.get("/")
+@app.get("/", include_in_schema=False)
 def home():
     return {"message": "Welcome to Credit Risk Analysis API!"}
 
 # Endpoint login
-@app.get("/login")
+@app.get("/login", include_in_schema=False)
 async def login_page(request: Request):
     """
     Display the login page template.
@@ -114,35 +115,73 @@ async def login_for_access_token(
     return response
 
 # Endpoint index. Render the loan prediction form using Jinja2 template
-@app.get("/index/", response_class=HTMLResponse)
+@app.get("/index/", response_class=HTMLResponse, include_in_schema=False)
 async def get_loan_prediction_form(request: Request):
     # Render the template with the necessary context
     return templates.TemplateResponse("index.html", {"request": request})
 
 # Endpoint Prediction page
-@app.post("/prediction")
+@app.post(
+    "/prediction", 
+    response_class=HTMLResponse,
+    summary="Predict loan approval",
+    description="Process loan application data and predict whether the loan will be approved or rejected.",
+    openapi_extra={
+        "requestBody": {
+            "content": {
+                "application/x-www-form-urlencoded": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string", "example": "John Doe", "description": "Customer's full name"},
+                            "age": {"type": "string", "example": "26-35", "description": "Age range of the customer (e.g., 26-35, 36-45, 46-60, <18, >60)"},
+                            "sex": {"type": "integer", "example": 1, "description": "Gender (Male=1, Female=0)"},
+                            "marital_status": {"type": "string", "example": "single", "description": "Marital status (other, single)"},
+                            "monthly_income_tot": {"type": "string", "example": "1320-3323", "description": "Monthly income range (1320-3323, 3323-8560, 650-1320, >8560)"},
+                            "payment_day": {"type": "integer", "example": 1, "description": "Payment day (0 = 1-14, 1 = 15-30)"},
+                            "residential_state": {"type": "string", "example": "NY", "description": "State of residence abbreviation"},
+                            "months_in_residence": {"type": "string", "example": ">12", "description": "Months in residence (6-12, >12)"},
+                            "product": {"type": "string", "example": "2", "description": "Product type (2, 7)"},
+                            "flag_company": {"type": "string", "example": "on", "description": "Has company association (on/off)"},
+                            "flag_dependants": {"type": "string", "example": "on", "description": "Has dependants (on/off)"},
+                            "quant_dependants": {"type": "integer", "example": 1, "description": "Number of dependants (1, 2, 3)"},
+                            "flag_residencial_phone": {"type": "string", "example": "on", "description": "Has residential phone (on/off)"},
+                            "flag_professional_phone": {"type": "string", "example": "on", "description": "Has professional phone (on/off)"},
+                            "flag_email": {"type": "string", "example": "on", "description": "Has email (on/off)"},
+                            "flag_cards": {"type": "string", "example": "on", "description": "Has cards (on/off)"},
+                            "flag_residence": {"type": "string", "example": "on", "description": "Has residence (on/off)"},
+                            "flag_banking_accounts": {"type": "string", "example": "on", "description": "Has banking accounts (on/off)"},
+                            "flag_personal_assets": {"type": "string", "example": "on", "description": "Has personal assets (on/off)"},
+                            "flag_cars": {"type": "string", "example": "on", "description": "Has cars (on/off)"}
+                        }
+                    }
+                }
+            }
+        }
+    }
+)
 def predict(
     request: Request,
-    name: str = Form(...),
-    age: str = Form(...),
-    sex: int = Form(...),
-    marital_status: str = Form(...),
-    monthly_income_tot: str = Form(...),
-    payment_day: int = Form(...),
-    residential_state: str = Form(...),
-    months_in_residence: Union[str, None] = Form(None),
-    product: str = Form(...),
-    flag_company: Union[str, None] = Form(None),
-    flag_dependants: Union[str, None] = Form(None),
-    quant_dependants: int = Form(...),
-    flag_residencial_phone: Union[str, None] = Form(None),
-    flag_professional_phone: Union[str, None] = Form(None),
-    flag_email: Union[str, None] = Form(None),
-    flag_cards: Union[str, None] = Form(None),
-    flag_residence: Union[str, None] = Form(None),
-    flag_banking_accounts: Union[str, None] = Form(None),
-    flag_personal_assets: Union[str, None] = Form(None),
-    flag_cars: Union[str, None] = Form(None),
+    name: str = Form(..., description="Customer's full name"),
+    age: str = Form(..., description="Age range of the customer (e.g., 26-35, 36-45, 46-60, <18, >60)"),
+    sex: int = Form(..., description="Gender (Male=1, Female=0)"),
+    marital_status: str = Form(..., description="Marital status (other, single)"),
+    monthly_income_tot: str = Form(..., description="Monthly income range (1320-3323, 3323-8560, 650-1320, >8560)"),
+    payment_day: int = Form(..., description="Payment day (0 = 1-14, 1 = 15-30)"),
+    residential_state: str = Form(..., description="State of residence abbreviation"),
+    months_in_residence: Union[str, None] = Form(None, description="Months in residence (6-12, >12)"),
+    product: str = Form(..., description="Product type (2, 7)"),
+    flag_company: Union[str, None] = Form(None, description="Has company association (on/off)"),
+    flag_dependants: Union[str, None] = Form(None, description="Has dependants (on/off)"),
+    quant_dependants: int = Form(..., description="Number of dependants (1, 2, 3)"),
+    flag_residencial_phone: Union[str, None] = Form(None, description="Has residential phone (on/off)"),
+    flag_professional_phone: Union[str, None] = Form(None, description="Has professional phone (on/off)"),
+    flag_email: Union[str, None] = Form(None, description="Has email (on/off)"),
+    flag_cards: Union[str, None] = Form(None, description="Has cards (on/off)"),
+    flag_residence: Union[str, None] = Form(None, description="Has residence (on/off)"),
+    flag_banking_accounts: Union[str, None] = Form(None, description="Has banking accounts (on/off)"),
+    flag_personal_assets: Union[str, None] = Form(None, description="Has personal assets (on/off)"),
+    flag_cars: Union[str, None] = Form(None, description="Has cars (on/off)"),
 ):
     """
     Handle user's credit prediction request using a machine learning model.
@@ -174,6 +213,7 @@ def predict(
     - TemplateResponse: FastAPI template response containing prediction outcome.
     """
 
+    # Rest of your function stays the same
     # Load template of JSON file containing columns name
     schema_name = "columns_set.json"
 
