@@ -8,7 +8,7 @@ from passlib.context import CryptContext
 
 import os
 
-import database, models, settings
+import database, models
 from dotenv import load_dotenv
 
 #Load enviroment variables
