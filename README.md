@@ -1,5 +1,6 @@
 
 ## Run Application with Docker
+got to src / folder and create de .env
 Create virtual enviroment
 
 pip install -r requirements.txt

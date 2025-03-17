@@ -9,12 +9,16 @@ from typing import Union
 import database
 import pandas as pd
 import redis
-import settings
 import utils
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+from dotenv import load_dotenv
+
+#Load enviroment variables
+load_dotenv('.env')
 
 # Set up logging
 log_filename = "app_log.log"
@@ -37,7 +41,9 @@ current_dir = os.path.dirname(__file__)
 
 # Connect to Redis
 db = redis.Redis(
-    host=settings.REDIS_IP, port=settings.REDIS_PORT, db=settings.REDIS_DB_ID
+    host = os.getenv('REDIS_IP', 'redis') #os.getenv('REDIS_IP')
+    ,port = os.getenv('REDIS_PORT') 
+    ,db = os.getenv('REDIS_DB_ID')
 )
 
 # Your FastAPI app
@@ -45,16 +51,16 @@ app = FastAPI()
 
 # Load static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Load Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
-
-# Home page
+# Endpoint Home page
 @app.get("/")
 def home():
-    return {"message": "Welcome to the Loan Prediction API!"}
+    return {"message": "Welcome to Credit Risk Analysis API!"}
 
-
+# Endpoint login
 @app.get("/login")
 async def login_page(request: Request):
     """
@@ -68,8 +74,8 @@ async def login_page(request: Request):
     """
     return templates.TemplateResponse("login.html", {"request": request})
 
-
-@app.post("/token", response_class=HTMLResponse)
+# Endpoint token
+@app.post("/token", response_class = HTMLResponse)
 async def login_for_access_token(
     request: Request, username: str = Form(...), password: str = Form(...)
 ):
@@ -94,28 +100,26 @@ async def login_for_access_token(
             "login.html", {"request": request, "error_message": error_message}
         )
 
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))) #settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = utils.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
 
     # Render the index.html page directly in the response
     index_page_content = templates.get_template("index.html").render(request=request)
-    response = HTMLResponse(content=index_page_content)
+    response = HTMLResponse(content = index_page_content)
 
     # Set the token as a cookie
     response.set_cookie("access_token", access_token)
     return response
 
-
-# Render the loan prediction form using Jinja2 template
+# Endpoint index. Render the loan prediction form using Jinja2 template
 @app.get("/index/", response_class=HTMLResponse)
 async def get_loan_prediction_form(request: Request):
     # Render the template with the necessary context
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-# Prediction page
+# Endpoint Prediction page
 @app.post("/prediction")
 def predict(
     request: Request,
@@ -172,6 +176,7 @@ def predict(
 
     # Load template of JSON file containing columns name
     schema_name = "columns_set.json"
+
     # Directory where the schema is stored
     schema_dir = os.path.join(current_dir, schema_name)
     with open(schema_dir, "r") as f:
@@ -286,7 +291,7 @@ def predict(
     job_id = data_message["id"]
 
     # Send the job to the model service using Redis
-    db.lpush(settings.REDIS_QUEUE, job_data)
+    db.lpush(os.getenv("REDIS_QUEUE"), job_data)
 
     # Wait for result model
     # Loop until we received the response from our ML model
@@ -306,7 +311,7 @@ def predict(
             break
 
         # Sleep some time waiting for model results
-        time.sleep(settings.API_SLEEP)
+        time.sleep(float(os.getenv('API_SLEEP')))
 
     # Determine the output message
     if int(prediction) == 1:
@@ -314,7 +319,7 @@ def predict(
             name=name, proba=score
         )
     else:
-        prediction = "Dear {name}, your loan is approved!".format(name=name)
+        prediction = "Dear {name}, your loan is approved!".format(name = name)
 
     context = {
         "request": request,

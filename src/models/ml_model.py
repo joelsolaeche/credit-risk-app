@@ -1,19 +1,25 @@
+import redis
+import json
+import time
 import pickle
 import os
 import logging
 import numpy as np
-import settings
-import redis
-import json
-import time
+
+from dotenv import load_dotenv
+
+#Load enviroment variables
+load_dotenv('.env')
 
 # Set up logging
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level = logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-# Connect to Redis and assign to variable `db``
+# Connect to Redis 
 db = redis.Redis(
-    host=settings.REDIS_IP, port=settings.REDIS_PORT, db=settings.REDIS_DB_ID
+    host = os.getenv("REDIS_IP", "redis") #os.getenv('REDIS_IP')
+    ,port = os.getenv('REDIS_PORT') 
+    ,db = os.getenv('REDIS_DB_ID')
 )
 
 
@@ -31,7 +37,6 @@ def load_model(filename):
     - best_estimator (object): The best estimator (trained model) from GridSearchCV.
     - best_score (float): The best score achieved by the model during GridSearchCV.
     """
-    # Check if the given filename exists in the filesystem
     if os.path.exists(filename):
         # Open the file in binary read mode
         with open(filename, "rb") as f:
@@ -39,12 +44,9 @@ def load_model(filename):
             model_tmp = pickle.load(f)
             # logger.info("model:", model_tmp)
     else:
-        # If the file does not exist, raise a FileNotFoundError
         raise FileNotFoundError(f"The file {filename} does not exist.")
 
     return model_tmp.best_estimator_, model_tmp.best_score_
-
-import numpy as np
 
 def predict(data):
     """
@@ -96,8 +98,6 @@ def predict(data):
     # Return the prediction results
     return model_name, model_score, class_name, pred_probability
 
-
-
 def classify_process():
     """
     Continuously process incoming jobs from the Redis queue.
@@ -115,14 +115,14 @@ def classify_process():
 
     while True:
         # Take a new job from Redis
-        msg = db.brpop(settings.REDIS_QUEUE, settings.SERVER_SLEEP)
+        msg_queue = db.brpop(os.getenv('REDIS_QUEUE'), float(os.getenv('SERVER_SLEEP')))
 
-        if msg is not None:
+        if msg_queue is not None:
             # Extract the message content from the returned tuple
-            msg = msg[1]
+            msg_queue = msg_queue[1]
 
             # Run ML model on the given data
-            newmsg = json.loads(msg)
+            newmsg = json.loads(msg_queue)
             model_name, model_score, class_name, pred_probability = predict(
                 newmsg["data"]
             )
@@ -140,10 +140,9 @@ def classify_process():
             db.set(res_id, json.dumps(res_dict))
 
         # Sleep for a bit before processing the next job
-        time.sleep(settings.SERVER_SLEEP)
+        time.sleep(float(os.getenv('SERVER_SLEEP')))
 
 
 if __name__ == "__main__":
-    # Now launch process
-    logger.info("Launching ML service...")
+    logger.info("....Starting ML....")
     classify_process()
