@@ -36,10 +36,10 @@
             <div class="flex justify-center mb-6">
                 <div class="relative w-28 h-28">
                     {% if 'approved' in result.lower() %}
-                    <img src="/static/images/approved.png" alt="Approved Status" class="w-full h-full object-contain filter drop-shadow-lg">
+                    <img src="/static/images/approved.png" alt="Approved Status" class="w-full h-full object-contain filter drop-shadow-lg rounded-full">
                     <div class="absolute inset-0 bg-green-500 rounded-full opacity-10 blur-md"></div>
                     {% else %}
-                    <img src="/static/images/rejected.png" alt="Rejected Status" class="w-full h-full object-contain filter drop-shadow-lg">
+                    <img src="/static/images/rejected_real.png" alt="Rejected Status" class="w-full h-full object-contain filter drop-shadow-lg rounded-full">
                     <div class="absolute inset-0 bg-red-500 rounded-full opacity-10 blur-md"></div>
                     {% endif %}
                 </div>
