@@ -1,240 +1,416 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Credit Analysis Risk</title>
-
-    <!-- Font Icon -->
-    <link rel="stylesheet" href="../static/fonts/material-icon/css/material-design-iconic-font.min.css">
-    <!--<link rel="icon" type="image/x-icon" href="../static/images/anyoneai-logo.png">-->
-
-    <!-- Main css -->
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/financial-profit.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a', /* Deeper blue background */
+                        darkCard: '#1e293b', /* Richer card background */
+                        darkBorder: '#334155', /* Higher contrast border */
+                        accent: '#3b82f6', /* Primary accent color */
+                        accentHover: '#2563eb' /* Darker accent for hover */
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        .gradient-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+        
+        .form-section {
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            transform: translateY(-2px);
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23939393'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+        }
+    </style>
 </head>
 
-<body>
+<body class="bg-darkBg text-gray-100 font-sans">
+    <div class="min-h-screen py-12">
+        <!-- App header with subtle animation -->
+        <header class="max-w-3xl mx-auto mb-8 text-center">
+            <h1 class="text-4xl font-bold gradient-header tracking-tight mb-2">Credit Risk Analysis</h1>
+            <p class="text-blue-300 text-opacity-80">Smart decisions with machine learning</p>
+        </header>
 
-    <div class="main">
-
+        <!-- Image -->
+        <div class="max-w-3xl mx-auto mb-10">
+            <div class="relative h-48 overflow-hidden rounded-lg shadow-xl">
+                <!-- Image container with overlay -->
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/50 to-darkBg/70 z-10"></div>
+                <img src="/static/images/unnamed.png" alt="Credit Analysis Visualization" 
+                    class="w-full h-full object-cover">
+                
+                <!-- Optional text overlay -->
+                <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-20">
+                    <p class="text-lg font-medium">Make informed lending decisions</p>
+                </div>
+            </div>
+        </div>
+        
         <!-- Applicant form -->
-        <section class="signup">
-            <div class="container">
-                <div class="signup-content">
-                    <div class="signup-form">
-                        <h2 class="form-title">Credit Analysis Risk</h2>
-                        <form action="/prediction" method="POST" class="register-form" id="register-form">
-                            <h1>Credit form</h1>
-                            <!-- Name -->
-                            <div class="form-group">
-                                <label for="name"><i class="zmdi zmdi-account material-icons-name"></i></label>
-                                <input type="text" name="name" id="name" placeholder="Your Name" required>
+        <section class="max-w-3xl mx-auto">
+            <div class="bg-darkCard rounded-xl shadow-2xl overflow-hidden border border-darkBorder">
+                <!-- Form progress indicator -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-400 h-1"></div>
+                
+                <div class="p-8">
+                    <div>
+                        <form action="/prediction" method="POST" class="space-y-6">
+                            <!-- Form sections with visual grouping -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50 mb-6">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-user-circle mr-2"></i>Personal Information
+                                </h3>
+                                
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <!-- Name -->
+                                    <div class="relative">
+                                        <label for="name" class="text-sm font-medium text-gray-300 block mb-1">Your Name</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-user"></i></span>
+                                            <input type="text" name="name" id="name" placeholder="Your Name" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 placeholder-gray-500 input-focus">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Birthdate -->
+                                    <div class="relative">
+                                        <label for="birthdate" class="text-sm font-medium text-gray-300 block mb-1">Birthdate</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-calendar"></i></span>
+                                            <input type="date" name="birthdate" id="birthdate" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- AGE / CATEGORICAL -->
+                                    <div class="relative">
+                                        <label for="age" class="text-sm font-medium text-gray-300 block mb-1">Age Group</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-user-clock"></i></span>
+                                            <select name="age" id="age" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select age group</option>
+                                                <option value="18">Below 18</option>
+                                                <option value="26-35">26 to 35</option>
+                                                <option value="36-45">36 to 45</option>
+                                                <option value="46-60">46 to 60</option>
+                                                <option value=">60">Above 60</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- SEX -->
+                                    <div class="relative">
+                                        <label for="sex" class="text-sm font-medium text-gray-300 block mb-1">Gender</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-venus-mars"></i></span>
+                                            <select name="sex" id="sex" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select gender</option>
+                                                <option value="1">Male</option>
+                                                <option value="0">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- MARITAL_STATUS -->
+                                    <div class="relative">
+                                        <label for="marital_status" class="text-sm font-medium text-gray-300 block mb-1">Marital Status</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-heart"></i></span>
+                                            <select name="marital_status" id="marital_status" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select marital status</option>
+                                                <option value="single">Single</option>
+                                                <option value="other">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- RESIDENTIAL_STATE -->
+                                    <div class="relative">
+                                        <label for="residential_state" class="text-sm font-medium text-gray-300 block mb-1">Residential State</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-map-marker-alt"></i></span>
+                                            <select name="residential_state" id="residential_state" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select state</option>
+                                                <option value="AL">AL</option>
+                                                <option value="AM">AM</option>
+                                                <option value="AP">AP</option>
+                                                <option value="BA">BA</option>
+                                                <option value="CE">CE</option>
+                                                <option value="DF">DF</option>
+                                                <option value="ES">ES</option>
+                                                <option value="GO">GO</option>
+                                                <option value="MA">MA</option>
+                                                <option value="MG">MG</option>
+                                                <option value="MS">MS</option>
+                                                <option value="MT">MT</option>
+                                                <option value="PA">PA</option>
+                                                <option value="PB">PB</option>
+                                                <option value="PE">PE</option>
+                                                <option value="PI">PI</option>
+                                                <option value="PR">PR</option>
+                                                <option value="RJ">RJ</option>
+                                                <option value="RN">RN</option>
+                                                <option value="RO">RO</option>
+                                                <option value="RS">RS</option>
+                                                <option value="SC">SC</option>
+                                                <option value="SE">SE</option>
+                                                <option value="SP">SP</option>
+                                                <option value="TO">TO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- Birthdate -->
-                            <div class="form-group">
-                                <label for="birthdate"><i class="zmdi zmdi-calendar"></i></label>
-                                <input type="date" name="birthdate" id="birthdate" placeholder="Birthdate" required>
+                            
+                            <!-- Financial Information Section -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50 mb-6">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-money-bill-wave mr-2"></i>Financial Information
+                                </h3>
+                                
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    <!-- MONTHLY_INCOMES_TOT -->
+                                    <div class="relative">
+                                        <label for="monthly_income_tot" class="text-sm font-medium text-gray-300 block mb-1">Monthly Income</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-dollar-sign"></i></span>
+                                            <select name="monthly_income_tot" id="monthly_income_tot" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select income range</option>
+                                                <option value="650-1320">$650 - $1,320</option>
+                                                <option value="1320-3323">$1,320 - $3,323</option>
+                                                <option value="3323-8560">$3,323 - $8,560</option>
+                                                <option value=">8560">Above $8,560</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- PRODUCT -->
+                                    <div class="relative">
+                                        <label for="product" class="text-sm font-medium text-gray-300 block mb-1">Product Type</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-box"></i></span>
+                                            <select name="product" id="product" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select product type</option>
+                                                <option value="2">Credit Card</option>
+                                                <option value="7">Personal Loan</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- PAYMENT_DAY -->
+                                    <div class="relative">
+                                        <label for="payment_day" class="text-sm font-medium text-gray-300 block mb-1">Payment Day</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-calendar-day"></i></span>
+                                            <select name="payment_day" id="payment_day" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select payment period</option>
+                                                <option value="1">1st - 14th day of month</option>
+                                                <option value="0">15th - 30th day of month</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- FLAG_COMPANY -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-30">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="flag_company" id="flag_company" value="1" 
+                                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                            <label for="flag_company" class="ml-2 block text-sm text-gray-300">Currently employed by a company</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- AGE / CATEGORICAL -->
-                            <div class="form-group">
-                                <label for="age"><i class="zmdi zmdi-home"></i></label>
-                                <select name="age" id="age" required>
-                                    <option value="" disabled selected>Age</option>
-                                    <option value="<18">-18</option>
-                                    <option value="26-35">26-35</option>
-                                    <option value="36-45">36-45</option>
-                                    <option value="46-60">46-60</option>
-                                    <option value=">60">+60</option>
-                                </select>
+                            
+                            <!-- Family & Contact Information -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-users mr-2"></i>Family & Contact Information
+                                </h3>
+                                
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    <!-- FLAG_DEPENDANTS -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-30">
+                                        <div class="flex items-center">
+                                            <input type="checkbox" name="flag_dependants" id="flag_dependants" value="1"
+                                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                            <label for="flag_dependants" class="ml-2 block text-sm text-gray-300">Have dependants</label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- QUANT_DEPENDANTS -->
+                                    <div class="relative">
+                                        <label for="quant_dependants" class="text-sm font-medium text-gray-300 block mb-1">Number of Dependents</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-users"></i></span>
+                                            <select name="quant_dependants" id="quant_dependants" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select number</option>
+                                                <option value="1">1 dependent</option>
+                                                <option value="2">2 dependents</option>
+                                                <option value="3">3 dependents</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3 mt-4">
+                                    <h4 class="text-sm font-medium text-blue-400 border-b border-darkBorder pb-2">Contact Methods</h4>
+                                    
+                                    <div class="grid md:grid-cols-3 gap-2">
+                                        <!-- flag_residencial_phone -->
+                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
+                                            <input type="checkbox" name="flag_residencial_phone" id="flag_residencial_phone" value="1"
+                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                            <label for="flag_residencial_phone" class="ml-2 block text-sm text-gray-300">Residential phone</label>
+                                        </div>
+                                        
+                                        <!-- flag_professional_phone -->
+                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
+                                            <input type="checkbox" name="flag_professional_phone" id="flag_professional_phone" value="1"
+                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                            <label for="flag_professional_phone" class="ml-2 block text-sm text-gray-300">Work phone</label>
+                                        </div>
+                                        
+                                        <!-- flag_email -->
+                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
+                                            <input type="checkbox" name="flag_email" id="flag_email" value="1"
+                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                            <label for="flag_email" class="ml-2 block text-sm text-gray-300">Email address</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- SEX -->
-                            <div class="form-group">
-                                <label for="sex"><i class="zmdi zmdi-accounts"></i></label>
-                                <select name="sex" id="sex" required>
-                                    <option value="" disabled selected>Sex</option>
-                                    <option value="1">Male</option>
-                                    <option value="0">Female</option>
-                                </select>
+                            
+                            <!-- Assets Section -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-home mr-2"></i>Assets & Properties
+                                </h3>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <!-- flag_cards -->
+                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <input type="checkbox" name="flag_cards" id="flag_cards" value="1"
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                        <label for="flag_cards" class="ml-2 block text-sm text-gray-300">Credit cards</label>
+                                    </div>
+                                    
+                                    <!-- flag_residence -->
+                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <input type="checkbox" name="flag_residence" id="flag_residence" value="1"
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                        <label for="flag_residence" class="ml-2 block text-sm text-gray-300">Own residence</label>
+                                    </div>
+                                    
+                                    <!-- flag_banking_accounts -->
+                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <input type="checkbox" name="flag_banking_accounts" id="flag_banking_accounts" value="1"
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                        <label for="flag_banking_accounts" class="ml-2 block text-sm text-gray-300">Banking accounts</label>
+                                    </div>
+                                    
+                                    <!-- flag_personal_assets -->
+                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <input type="checkbox" name="flag_personal_assets" id="flag_personal_assets" value="1"
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                        <label for="flag_personal_assets" class="ml-2 block text-sm text-gray-300">Personal assets</label>
+                                    </div>
+                                    
+                                    <!-- flag_cars -->
+                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <input type="checkbox" name="flag_cars" id="flag_cars" value="1"
+                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                        <label for="flag_cars" class="ml-2 block text-sm text-gray-300">Own vehicle(s)</label>
+                                    </div>
+                                </div>
                             </div>
-                            <!-- MARITAL_STATUS / CATEGORICAL -->
-                            <div class="form-group">
-                                <label for="marital_status"><i class="zmdi zmdi-home"></i></label>
-                                <select name="marital_status" id="marital_status" required>
-                                    <option value="" disabled selected>Marital status</option>
-                                    <option value="other">other</option>
-                                    <option value="single">single</option>
-                                    <!-- More options for other marital statuses -->
-                                </select>
-                            </div>
-                            <!-- MONTHLY_INCOMES_TOT / CATEGORICAL -->
-                            <div class="form-group">
-                                <label for="monthly_income_tot"><i class="zmdi zmdi-home"></i></label>
-                                <select name="monthly_income_tot" id="monthly_income_tot" required>
-                                    <option value="" disabled selected>Monthly income total</option>
-                                    <!--<option value="0-650">0-650</option>-->
-                                    <option value="650-1320">650-1320</option>
-                                    <option value="1320-3323">1320-3323</option>
-                                    <option value="3323-8560">3323-8560</option>
-                                    <option value=">8560">>8560</option>
-                                </select>
-                            </div>
-                            <!-- PAYMENT_DAY -->
-                            <div class="form-group">
-                                <label for="payment_day"><i class="zmdi zmdi-accounts"></i></label>
-                                <select name="payment_day" id="payment_day" required>
-                                    <option value="" disabled selected>Payment day</option>
-                                    <option value="1">1-14</option>
-                                    <option value="0">15-30</option>
-                                </select>
-                            </div>
-                            <!-- RESIDENCIAL_STATE / CATEGORICAL -->
-                            <div class="form-group">
-                                <label for="residential_state"><i class="zmdi zmdi-home"></i></label>
-                                <select name="residential_state" id="residential_state" placeholder="Residential state" required>
-                                    <option value="" disabled selected>Residencial state</option>
-                                    <option value="AL">AL</option>
-                                    <option value="AM">AM</option>
-                                    <option value="AP">AP</option>
-                                    <option value="BA">BA</option>
-                                    <option value="CE">CE</option>
-                                    <option value="DF">DF</option>
-                                    <option value="ES">ES</option>
-                                    <option value="GO">GO</option>
-                                    <option value="MA">MA</option>
-                                    <option value="MG">MG</option>
-                                    <option value="MS">MS</option>
-                                    <option value="MT">MT</option>
-                                    <option value="PA">PA</option>
-                                    <option value="PB">PB</option>
-                                    <option value="PE">PE</option>
-                                    <option value="PI">PI</option>
-                                    <option value="PR">PR</option>
-                                    <option value="RJ">RJ</option>
-                                    <option value="RN">RN</option>
-                                    <option value="RO">RO</option>
-                                    <option value="RS">RS</option>
-                                    <option value="SC">SC</option>
-                                    <option value="SE">SE</option>
-                                    <option value="SP">SP</option>
-                                    <option value="TO">TO</option>
-                                </select>
-                            </div>
-                            <!-- MONTHS_IN_RESIDENCE -->
-                            <div class="form-group">
-                                <label for="months_in_residence"><i class="zmdi zmdi-home"></i></label>
-                                <select name="months_in_residence" id="months_in_residence" placeholder="Months in residence" required>
-                                    <option value="" disabled selected>Months in residence</option>
-                                    <option value="6-12">6-12</option>
-                                    <option value=">12">>12</option>
-                                </select>
-                            </div>
-                            <!-- PRODUCT -->
-                            <div class="form-group">
-                                <label for="product"><i class="zmdi zmdi-home"></i></label>
-                                <select name="product" id="product" placeholder="Product" required>
-                                    <option value="" disabled selected>Product</option>
-                                    <option value="2">Credit House</option>
-                                    <option value="7">Credit Car</option>
-                                </select>
-                            </div>
-                            <!-- FLAG_COMPANY -->
-                            <div class="form-group">
-                                <label for="flag_company"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_company" id="flag_company" value="1">
-                                <label for="flag_company" class="label-agree-term"><span><span></span></span>Do you work in a company?</label>
-                            </div>
-                            <!-- FLAG_DEPENDANTS -->
-                            <div class="form-group">
-                                <label for="flag_dependants"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_dependants" id="flag_dependants" value="1">
-                                <label for="flag_dependants" class="label-agree-term"><span><span></span></span>Do you have dependants?</label>
-                            </div>
-                            <!-- QUANT_DEPENDANTS -->
-                            <div class="form-group">
-                                <label for="quant_dependants"><i class="zmdi zmdi-home"></i></label>
-                                <select name="quant_dependants" id="quant_dependants" placeholder="Number of Dependents" required>
-                                    <option value="" disabled selected>Number of Dependents</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                </select>
-                            </div>
-                            <!-- flag_residencial_phone -->
-                            <div class="form-group">
-                                <label for="flag_residencial_phone"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_residencial_phone" id="flag_residencial_phone" value="1">
-                                <label for="flag_residencial_phone" class="label-agree-term"><span><span></span></span>Do you have residencial phone?</label>
-                            </div>
-                            <!-- flag_professional_phone -->
-                            <div class="form-group">
-                                <label for="flag_professional_phone"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_professional_phone" id="flag_professional_phone" value="1">
-                                <label for="flag_professional_phone" class="label-agree-term"><span><span></span></span>Do you have professional phone?</label>
-                            </div>
-                            <!-- flag_email -->
-                            <div class="form-group">
-                                <label for="flag_email"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_email" id="flag_email" value="1">
-                                <label for="flag_email" class="label-agree-term"><span><span></span></span>Do you have email?</label>
-                            </div>
-                            <!-- flag_cards -->
-                            <div class="form-group">
-                                <label for="flag_cards"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_cards" id="flag_cards" value="1">
-                                <label for="flag_cards" class="label-agree-term"><span><span></span></span>Do you have any credit
-                                    cards?</label>
-                            </div>
-                            <!-- flag_residence -->
-                            <div class="form-group">
-                                <label for="flag_residence"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_residence" id="flag_residence" value="1">
-                                <label for="flag_residence" class="label-agree-term"><span><span></span></span>Do you have residence?</label>
-                            </div>
-                            <!-- flag_banking_accounts -->
-                            <div class="form-group">
-                                <label for="flag_banking_accounts"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_banking_accounts" id="flag_banking_accounts" value="1">
-                                <label for="flag_banking_accounts" class="label-agree-term"><span><span></span></span>Do you have banking accounts?</label>
-                            </div>
-                            <!-- flag_personal_assets -->
-                            <div class="form-group">
-                                <label for="flag_personal_assets"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_personal_assets" id="flag_personal_assets" value="1">
-                                <label for="flag_personal_assets" class="label-agree-term"><span><span></span></span>Do you have personal assets?</label>
-                            </div>
-                            <!-- flag_cars -->
-                            <div class="form-group">
-                                <label for="flag_cars"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="flag_cars" id="flag_cars" value="1">
-                                <label for="flag_cars" class="label-agree-term"><span><span></span></span>Do you have cars?</label>
-                            </div>
-                            <!--Application submission type
-                            <div class="form-group">
-                                <label for="submission_type_web"><i class="zmdi zmdi-accounts"></i></label>
-                                <input type="checkbox" name="submission_type_web" id="submission_type_web" value="1">
-                                <label for="submission_type_web" class="label-agree-term"><span><span></span></span>Submission_type_web?</label>
-                            </div>-->
+                            
                             <!-- Terms condition / checkbox -->
-                            <div class="form-group">
-                                <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" required>
-                                <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all
-                                    statements in <a href="#" class="term-service">Terms of service</a></label>
+                            <div class="mt-6 p-4 bg-blue-900 bg-opacity-20 rounded-lg border border-blue-800 border-opacity-30">
+                                <div class="flex items-center">
+                                    <input type="checkbox" name="agree-term" id="agree-term" required
+                                        class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
+                                    <label for="agree-term" class="ml-2 block text-sm text-gray-300">
+                                        I agree to all statements in the <a href="#" class="text-blue-400 hover:underline font-medium">Terms of Service</a>
+                                    </label>
+                                </div>
                             </div>
-                            <!-- Submit / button -->
-                            <div class="form-group form-button">
-                                <input type="submit" name="signup" id="signup" class="form-submit" value="Check Status">
+                            
+                            <!-- Submit button -->
+                            <div class="mt-8">
+                                <button type="submit" 
+                                    class="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3.5 px-4 rounded-lg hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-[1.02] font-medium text-lg shadow-lg flex items-center justify-center">
+                                    <i class="fas fa-chart-line mr-2"></i>Analyze Credit Risk
+                                </button>
                             </div>
                         </form>
                     </div>
-                    <!--<div class="signup-image">
-                        <figure><img src="../static/images/anyoneai-img.png" alt="sing up image"></figure>
-                    </div>-->
+                </div>
+                
+                <!-- Footer -->
+                <div class="px-8 py-5 bg-gradient-to-r from-darkBg to-darkCard text-center text-gray-400 text-xs">
+                    <p>© 2025 Credit Analysis Risk Application • Powered by Anyone AI</p>
                 </div>
             </div>
         </section>
     </div>
+    
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.5s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100 * (index + 1));
+            });
+        });
+    </script>
 </body>
 
 </html>

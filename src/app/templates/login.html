@@ -1,35 +1,96 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Credit Analysis Risk</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>
-        /* Add your custom CSS styling here */
-    </style>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/financial-profit.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#121212',
+                        darkCard: '#1E1E1E',
+                        darkBorder: '#333333'
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 
-<body>
-    <div class="container mt-5">
-        <h1>Credit Analysis Risk - Login</h1>
-        <form method="post" action="/token" class="mt-4">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" class="form-control" id="username" name="username" required>
+<body class="bg-darkBg text-gray-100">
+    <div class="min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8">
+            <div class="text-center">
+                <!-- Image added here - centered logo/illustration -->
+                <div class="mx-auto w-sm h-sm mb-6 relative">
+                    <img src="/static/images/icon.png" alt="Credit Analysis Risk Logo" 
+                         class="w-full h-full object-contain filter drop-shadow-lg rounded-full border-2 border-blue-400">
+                    <div class="absolute inset-0 bg-blue-500 rounded-full opacity-10 blur-md"></div>
+                </div>
+
+                <h1 class="text-4xl font-bold text-blue-400 mb-2">Credit Analysis Risk</h1>
+                <p class="text-gray-400">Log in to your account</p>
             </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" name="password" required>
+            
+            <div class="bg-darkCard rounded-xl shadow-lg p-8 border border-darkBorder">
+                <form method="post" action="/token" class="space-y-6">
+                    <div>
+                        <label for="username" class="block text-gray-300 text-sm font-medium mb-2">
+                            <i class="fas fa-user mr-2 text-blue-400"></i>Username
+                        </label>
+                        <input type="text" id="username" name="username" required 
+                            class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 placeholder-gray-500"
+                            placeholder="Enter your username">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-gray-300 text-sm font-medium mb-2">
+                            <i class="fas fa-lock mr-2 text-blue-400"></i>Password
+                        </label>
+                        <div class="relative">
+                            <input type="password" id="password" name="password" required 
+                                class="w-full px-4 py-3 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 placeholder-gray-500"
+                                placeholder="Enter your password">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <button type="submit" 
+                            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-300">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Sign in
+                        </button>
+                    </div>
+                </form>
+                
+                <!-- Demo credentials hint -->
+                <div class="mt-6 bg-blue-900 bg-opacity-20 rounded-md p-4 text-sm text-blue-300 border border-blue-900">
+                    <p class="flex items-center">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <span>Demo credentials: <strong>anyoneai / password</strong></span>
+                    </p>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Login</button>
-        </form>
-        {% if error_message %}
-        <div class="alert alert-danger mt-3">
-            {{ error_message }}
+            
+            {% if error_message %}
+            <div class="bg-red-900 bg-opacity-30 border border-red-700 text-red-300 px-4 py-3 rounded-md flex items-center">
+                <i class="fas fa-exclamation-circle mr-2 text-red-400"></i>
+                {{ error_message }}
+            </div>
+            {% endif %}
+            
+            <div class="text-center text-gray-500 text-sm">
+                <p>© 2025 Credit Analysis Risk • Powered by Anyone AI</p>
+            </div>
         </div>
-        {% endif %}
     </div>
 </body>
 
