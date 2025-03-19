@@ -6,15 +6,20 @@ import uuid
 from datetime import timedelta
 from typing import Union
 
+
 import database
 import pandas as pd
 import redis
-import settings
 import utils
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+from dotenv import load_dotenv
+
+#Load enviroment variables
+load_dotenv('.env')
 
 # Set up logging
 log_filename = "app_log.log"
@@ -37,7 +42,9 @@ current_dir = os.path.dirname(__file__)
 
 # Connect to Redis
 db = redis.Redis(
-    host=settings.REDIS_IP, port=settings.REDIS_PORT, db=settings.REDIS_DB_ID
+    host = os.getenv('REDIS_IP', 'redis') #os.getenv('REDIS_IP')
+    ,port = os.getenv('REDIS_PORT') 
+    ,db = os.getenv('REDIS_DB_ID')
 )
 
 # Your FastAPI app
@@ -45,17 +52,17 @@ app = FastAPI()
 
 # Load static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Load Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
-
-# Home page
-@app.get("/")
+# Endpoint Home page
+@app.get("/", include_in_schema=False)
 def home():
-    return {"message": "Welcome to the Loan Prediction API!"}
+    return {"message": "Welcome to Credit Risk Analysis API!"}
 
-
-@app.get("/login")
+# Endpoint login
+@app.get("/login", include_in_schema=False)
 async def login_page(request: Request):
     """
     Display the login page template.
@@ -68,8 +75,8 @@ async def login_page(request: Request):
     """
     return templates.TemplateResponse("login.html", {"request": request})
 
-
-@app.post("/token", response_class=HTMLResponse)
+# Endpoint token
+@app.post("/token", response_class = HTMLResponse)
 async def login_for_access_token(
     request: Request, username: str = Form(...), password: str = Form(...)
 ):
@@ -94,51 +101,87 @@ async def login_for_access_token(
             "login.html", {"request": request, "error_message": error_message}
         )
 
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))) #settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = utils.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
 
     # Render the index.html page directly in the response
     index_page_content = templates.get_template("index.html").render(request=request)
-    response = HTMLResponse(content=index_page_content)
+    response = HTMLResponse(content = index_page_content)
 
     # Set the token as a cookie
     response.set_cookie("access_token", access_token)
     return response
 
-
-# Render the loan prediction form using Jinja2 template
-@app.get("/index/", response_class=HTMLResponse)
+# Endpoint index. Render the loan prediction form using Jinja2 template
+@app.get("/index/", response_class=HTMLResponse, include_in_schema=False)
 async def get_loan_prediction_form(request: Request):
     # Render the template with the necessary context
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-# Prediction page
-@app.post("/prediction")
+# Endpoint Prediction page
+@app.post(
+    "/prediction", 
+    response_class=HTMLResponse,
+    summary="Predict loan approval",
+    description="Process loan application data and predict whether the loan will be approved or rejected.",
+    openapi_extra={
+        "requestBody": {
+            "content": {
+                "application/x-www-form-urlencoded": {
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {"type": "string", "example": "John Doe", "description": "Customer's full name"},
+                            "age": {"type": "string", "example": "26-35", "description": "Age range of the customer (e.g., 26-35, 36-45, 46-60, <18, >60)"},
+                            "sex": {"type": "integer", "example": 1, "description": "Gender (Male=1, Female=0)"},
+                            "marital_status": {"type": "string", "example": "single", "description": "Marital status (other, single)"},
+                            "monthly_income_tot": {"type": "string", "example": "1320-3323", "description": "Monthly income range (1320-3323, 3323-8560, 650-1320, >8560)"},
+                            "payment_day": {"type": "integer", "example": 1, "description": "Payment day (0 = 1-14, 1 = 15-30)"},
+                            "residential_state": {"type": "string", "example": "NY", "description": "State of residence abbreviation"},
+                            "months_in_residence": {"type": "string", "example": ">12", "description": "Months in residence (6-12, >12)"},
+                            "product": {"type": "string", "example": "2", "description": "Product type (2, 7)"},
+                            "flag_company": {"type": "string", "example": "on", "description": "Has company association (on/off)"},
+                            "flag_dependants": {"type": "string", "example": "on", "description": "Has dependants (on/off)"},
+                            "quant_dependants": {"type": "integer", "example": 1, "description": "Number of dependants (1, 2, 3)"},
+                            "flag_residencial_phone": {"type": "string", "example": "on", "description": "Has residential phone (on/off)"},
+                            "flag_professional_phone": {"type": "string", "example": "on", "description": "Has professional phone (on/off)"},
+                            "flag_email": {"type": "string", "example": "on", "description": "Has email (on/off)"},
+                            "flag_cards": {"type": "string", "example": "on", "description": "Has cards (on/off)"},
+                            "flag_residence": {"type": "string", "example": "on", "description": "Has residence (on/off)"},
+                            "flag_banking_accounts": {"type": "string", "example": "on", "description": "Has banking accounts (on/off)"},
+                            "flag_personal_assets": {"type": "string", "example": "on", "description": "Has personal assets (on/off)"},
+                            "flag_cars": {"type": "string", "example": "on", "description": "Has cars (on/off)"}
+                        }
+                    }
+                }
+            }
+        }
+    }
+)
 def predict(
     request: Request,
-    name: str = Form(...),
-    age: str = Form(...),
-    sex: int = Form(...),
-    marital_status: str = Form(...),
-    monthly_income_tot: str = Form(...),
-    payment_day: int = Form(...),
-    residential_state: str = Form(...),
-    months_in_residence: Union[str, None] = Form(None),
-    product: str = Form(...),
-    flag_company: Union[str, None] = Form(None),
-    flag_dependants: Union[str, None] = Form(None),
-    quant_dependants: int = Form(...),
-    flag_residencial_phone: Union[str, None] = Form(None),
-    flag_professional_phone: Union[str, None] = Form(None),
-    flag_email: Union[str, None] = Form(None),
-    flag_cards: Union[str, None] = Form(None),
-    flag_residence: Union[str, None] = Form(None),
-    flag_banking_accounts: Union[str, None] = Form(None),
-    flag_personal_assets: Union[str, None] = Form(None),
-    flag_cars: Union[str, None] = Form(None),
+    name: str = Form(..., description="Customer's full name"),
+    age: str = Form(..., description="Age range of the customer (e.g., 26-35, 36-45, 46-60, <18, >60)"),
+    sex: int = Form(..., description="Gender (Male=1, Female=0)"),
+    marital_status: str = Form(..., description="Marital status (other, single)"),
+    monthly_income_tot: str = Form(..., description="Monthly income range (1320-3323, 3323-8560, 650-1320, >8560)"),
+    payment_day: int = Form(..., description="Payment day (0 = 1-14, 1 = 15-30)"),
+    residential_state: str = Form(..., description="State of residence abbreviation"),
+    months_in_residence: Union[str, None] = Form(None, description="Months in residence (6-12, >12)"),
+    product: str = Form(..., description="Product type (2, 7)"),
+    flag_company: Union[str, None] = Form(None, description="Has company association (on/off)"),
+    flag_dependants: Union[str, None] = Form(None, description="Has dependants (on/off)"),
+    quant_dependants: int = Form(..., description="Number of dependants (1, 2, 3)"),
+    flag_residencial_phone: Union[str, None] = Form(None, description="Has residential phone (on/off)"),
+    flag_professional_phone: Union[str, None] = Form(None, description="Has professional phone (on/off)"),
+    flag_email: Union[str, None] = Form(None, description="Has email (on/off)"),
+    flag_cards: Union[str, None] = Form(None, description="Has cards (on/off)"),
+    flag_residence: Union[str, None] = Form(None, description="Has residence (on/off)"),
+    flag_banking_accounts: Union[str, None] = Form(None, description="Has banking accounts (on/off)"),
+    flag_personal_assets: Union[str, None] = Form(None, description="Has personal assets (on/off)"),
+    flag_cars: Union[str, None] = Form(None, description="Has cars (on/off)"),
 ):
     """
     Handle user's credit prediction request using a machine learning model.
@@ -170,8 +213,10 @@ def predict(
     - TemplateResponse: FastAPI template response containing prediction outcome.
     """
 
+    # Rest of your function stays the same
     # Load template of JSON file containing columns name
     schema_name = "columns_set.json"
+
     # Directory where the schema is stored
     schema_dir = os.path.join(current_dir, schema_name)
     with open(schema_dir, "r") as f:
@@ -279,6 +324,8 @@ def predict(
     # Replace NaN values with 0.0
     df = df.fillna(0.0)
 
+
+    
     # Debug the dimensions
     print(f"Generated dataframe shape: {df.shape}")
     with open("debug_features.json", "w") as f:
@@ -316,6 +363,11 @@ def predict(
             "count": df.shape[1]
         }, f, indent=2)
 
+
+
+
+
+
     # Generate an id for the classification then
     data_message = {"id": str(uuid.uuid4()), "data": df.iloc[0].values.tolist()}
 
@@ -323,7 +375,7 @@ def predict(
     job_id = data_message["id"]
 
     # Send the job to the model service using Redis
-    db.lpush(settings.REDIS_QUEUE, job_data)
+    db.lpush(os.getenv("REDIS_QUEUE"), job_data)
 
     # Wait for result model
     # Loop until we received the response from our ML model
@@ -343,7 +395,7 @@ def predict(
             break
 
         # Sleep some time waiting for model results
-        time.sleep(settings.API_SLEEP)
+        time.sleep(float(os.getenv('API_SLEEP')))
 
     # Determine the output message
     if int(prediction) == 1:
@@ -351,7 +403,7 @@ def predict(
             name=name, proba=score
         )
     else:
-        prediction = "Dear {name}, your loan is approved!".format(name=name)
+        prediction = "Dear {name}, your loan is approved!".format(name = name)
 
     context = {
         "request": request,
@@ -359,7 +411,6 @@ def predict(
         "model_score": model_score,
         "result": prediction,
     }
-
 
     # Render the prediction response using Jinja2 templates and return it
     return templates.TemplateResponse("prediction.html", context)
