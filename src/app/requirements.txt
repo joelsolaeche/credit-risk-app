@@ -12,3 +12,5 @@ termcolor
 python-multipart
 python-jose[cryptography]
 passlib[bcrypt]
+
+dotenv

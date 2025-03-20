@@ -6,7 +6,14 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 
-import database, models, settings
+import os
+
+import database, models
+from dotenv import load_dotenv
+
+#Load enviroment variables
+load_dotenv('.env')
+
 
 # Password hashing and verification context
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -96,7 +103,7 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
-        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
+        to_encode, os.getenv('SECRET_KEY'), algorithm = os.getenv('ALGORITHM')    #settings.SECRET_KEY, algorithm=settings.ALGORITHM
     )
 
     return encoded_jwt
@@ -122,7 +129,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> models.UserIn
     )
     try:
         payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
+            token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')]
         )
         username: str = payload.get("sub")
         if username is None:

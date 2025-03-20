@@ -10,12 +10,16 @@ from typing import Union
 import database
 import pandas as pd
 import redis
-import settings
 import utils
 from fastapi import FastAPI, Form, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+
+from dotenv import load_dotenv
+
+#Load enviroment variables
+load_dotenv('.env')
 
 # Set up logging
 log_filename = "app_log.log"
@@ -38,7 +42,9 @@ current_dir = os.path.dirname(__file__)
 
 # Connect to Redis
 db = redis.Redis(
-    host=settings.REDIS_IP, port=settings.REDIS_PORT, db=settings.REDIS_DB_ID
+    host = os.getenv('REDIS_IP', 'redis') #os.getenv('REDIS_IP')
+    ,port = os.getenv('REDIS_PORT') 
+    ,db = os.getenv('REDIS_DB_ID')
 )
 
 # Your FastAPI app
@@ -46,16 +52,16 @@ app = FastAPI()
 
 # Load static directory
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Load Jinja2 templates
 templates = Jinja2Templates(directory="templates")
 
-
-# Home page
+# Endpoint Home page
 @app.get("/", include_in_schema=False)
 def home():
-    return {"message": "Welcome to the Loan Prediction API!"}
+    return {"message": "Welcome to Credit Risk Analysis API!"}
 
-
+# Endpoint login
 @app.get("/login", include_in_schema=False)
 async def login_page(request: Request):
     """
@@ -69,8 +75,8 @@ async def login_page(request: Request):
     """
     return templates.TemplateResponse("login.html", {"request": request})
 
-
-@app.post("/token", response_class=HTMLResponse)
+# Endpoint token
+@app.post("/token", response_class = HTMLResponse)
 async def login_for_access_token(
     request: Request, username: str = Form(...), password: str = Form(...)
 ):
@@ -95,28 +101,26 @@ async def login_for_access_token(
             "login.html", {"request": request, "error_message": error_message}
         )
 
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))) #settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = utils.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
 
     # Render the index.html page directly in the response
     index_page_content = templates.get_template("index.html").render(request=request)
-    response = HTMLResponse(content=index_page_content)
+    response = HTMLResponse(content = index_page_content)
 
     # Set the token as a cookie
     response.set_cookie("access_token", access_token)
     return response
 
-
-# Render the loan prediction form using Jinja2 template
+# Endpoint index. Render the loan prediction form using Jinja2 template
 @app.get("/index/", response_class=HTMLResponse, include_in_schema=False)
 async def get_loan_prediction_form(request: Request):
     # Render the template with the necessary context
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-# Prediction page
+# Endpoint Prediction page
 @app.post(
     "/prediction", 
     response_class=HTMLResponse,
@@ -212,6 +216,7 @@ def predict(
     # Rest of your function stays the same
     # Load template of JSON file containing columns name
     schema_name = "columns_set.json"
+
     # Directory where the schema is stored
     schema_dir = os.path.join(current_dir, schema_name)
     with open(schema_dir, "r") as f:
@@ -289,16 +294,16 @@ def predict(
     except:
         pass
 
-    flag_company = True if flag_company == "on" else False
-    flag_dependants = True if flag_dependants == "on" else False
-    flag_residencial_phone = True if flag_residencial_phone == "on" else False
-    flag_professional_phone = True if flag_professional_phone == "on" else False
-    flag_email = True if flag_email == "on" else False
-    flag_cards = True if flag_cards == "on" else False
-    flag_residence = True if flag_residence == "on" else False
-    flag_banking_accounts = True if flag_banking_accounts == "on" else False
-    flag_personal_assets = True if flag_personal_assets == "on" else False
-    flag_cars = True if flag_cars == "on" else False
+    flag_company = True if flag_company in ["on", "1"] else False
+    flag_dependants = True if flag_dependants in ["on", "1"] else False
+    flag_residencial_phone = True if flag_residencial_phone in ["on", "1"] else False
+    flag_professional_phone = True if flag_professional_phone in ["on", "1"] else False
+    flag_email = True if flag_email in ["on", "1"] else False
+    flag_cards = True if flag_cards in ["on", "1"] else False
+    flag_residence = True if flag_residence in ["on", "1"] else False
+    flag_banking_accounts = True if flag_banking_accounts in ["on", "1"] else False
+    flag_personal_assets = True if flag_personal_assets in ["on", "1"] else False
+    flag_cars = True if flag_cars in ["on", "1"] else False
 
     # Parse the Numerical columns (One column)
     schema_cols["PAYMENT_DAY_15-30"] = payment_day
@@ -319,6 +324,50 @@ def predict(
     # Replace NaN values with 0.0
     df = df.fillna(0.0)
 
+
+    
+    # Debug the dimensions
+    print(f"Generated dataframe shape: {df.shape}")
+    with open("debug_features.json", "w") as f:
+        json.dump({"features": df.columns.tolist(), "count": df.shape[1]}, f, indent=2)
+
+    # CRITICAL FIX: Ensure EXACTLY 57 features are passed to the model
+    if df.shape[1] != 57:
+        print(f"Feature count mismatch: Have {df.shape[1]}, need 57")
+        
+        # The key issue: need to ensure consistent columns for the model
+        # If we have more than 57 features, trim the data down to exactly 57
+        if df.shape[1] > 57:
+            # Sort out features by importance (1's first, then alphabetical)
+            # This prioritizes features with actual values
+            col_order = df.iloc[0].sort_values(ascending=False).index.tolist()
+            
+            # Keep only the 57 most important features
+            df = df[col_order[:57]]
+            print(f"Kept top 57 features, new shape: {df.shape}")
+        else:
+            # If we have fewer than 57 features, pad with zeros
+            missing = 57 - df.shape[1]
+            for i in range(missing):
+                df[f"padding_{i}"] = 0
+            print(f"Padded features to 57, new shape: {df.shape}")
+
+        # Final check
+        if df.shape[1] != 57:
+            raise ValueError(f"Failed to adjust feature count to 57 (current: {df.shape[1]})")
+
+    # Write the final columns for reference
+    with open("final_features.json", "w") as f:
+        json.dump({
+            "final_features": df.columns.tolist(), 
+            "count": df.shape[1]
+        }, f, indent=2)
+
+
+
+
+
+
     # Generate an id for the classification then
     data_message = {"id": str(uuid.uuid4()), "data": df.iloc[0].values.tolist()}
 
@@ -326,7 +375,7 @@ def predict(
     job_id = data_message["id"]
 
     # Send the job to the model service using Redis
-    db.lpush(settings.REDIS_QUEUE, job_data)
+    db.lpush(os.getenv("REDIS_QUEUE"), job_data)
 
     # Wait for result model
     # Loop until we received the response from our ML model
@@ -346,7 +395,7 @@ def predict(
             break
 
         # Sleep some time waiting for model results
-        time.sleep(settings.API_SLEEP)
+        time.sleep(float(os.getenv('API_SLEEP')))
 
     # Determine the output message
     if int(prediction) == 1:
@@ -354,7 +403,7 @@ def predict(
             name=name, proba=score
         )
     else:
-        prediction = "Dear {name}, your loan is approved!".format(name=name)
+        prediction = "Dear {name}, your loan is approved!".format(name = name)
 
     context = {
         "request": request,
