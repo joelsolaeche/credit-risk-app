@@ -93,55 +93,80 @@
                                 <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
                                     <i class="fas fa-user-circle mr-2"></i>Personal Information
                                 </h3>
-                                
+
+                                <!-- Personal information -->
                                 <div class="grid md:grid-cols-2 gap-4">
-                                    <!-- Name -->
+                                    
+                                    <!-- NAME -->
                                     <div class="relative">
-                                        <label for="name" class="text-sm font-medium text-gray-300 block mb-1">Your Name</label>
+                                        <label for="name" class="text-sm font-medium text-gray-300 block mb-1">Full Name</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-user"></i></span>
-                                            <input type="text" name="name" id="name" placeholder="Your Name" required
-                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 placeholder-gray-500 input-focus">
-                                        </div>
-                                    </div>
-                                    
-                                    <!-- Birthdate -->
-                                    <div class="relative">
-                                        <label for="birthdate" class="text-sm font-medium text-gray-300 block mb-1">Birthdate</label>
-                                        <div class="flex items-center">
-                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-calendar"></i></span>
-                                            <input type="date" name="birthdate" id="birthdate" required
+                                            <input type="text" name="NAME" id="NAME" placeholder="Client's Name" required
                                                 class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
                                         </div>
                                     </div>
-                                    
-                                    <!-- AGE / CATEGORICAL -->
+
+
+                                    <!-- AGE -->
                                     <div class="relative">
-                                        <label for="age" class="text-sm font-medium text-gray-300 block mb-1">Age Group</label>
+                                        <label for="age" class="text-sm font-medium text-gray-300 block mb-1">Age</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-user-clock"></i></span>
-                                            <select name="age" id="age" required
+                                            <input type="number" name="AGE" id="AGE" min="18" max="99" placeholder="Enter age (18-99)" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Enter applicant's age (between 18-99)</p>
+                                    </div>
+
+                                    <!-- STATE_OF_BIRTH -->
+                                    <div class="relative">
+                                        <label for="state_of_birth" class="text-sm font-medium text-gray-300 block mb-1">Birth State</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-map-pin"></i></span>
+                                            <select name="STATE_OF_BIRTH" id="STATE_OF_BIRTH" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
-                                                <option value="" disabled selected>Select age group</option>
-                                                <option value="<18">-18</option>
-                                                <option value="26-35">26 to 35</option>
-                                                <option value="36-45">36 to 45</option>
-                                                <option value="46-60">46 to 60</option>
-                                                <option value=">60">Above 60</option>
+                                                <option value="" disabled selected>Select birth state</option>
+                                                <option value="AL">AL</option>
+                                                <option value="AM">AM</option>
+                                                <option value="AP">AP</option>
+                                                <option value="BA">BA</option>
+                                                <option value="CE">CE</option>
+                                                <option value="DF">DF</option>
+                                                <option value="ES">ES</option>
+                                                <option value="GO">GO</option>
+                                                <option value="MA">MA</option>
+                                                <option value="MG">MG</option>
+                                                <option value="MS">MS</option>
+                                                <option value="MT">MT</option>
+                                                <option value="PA">PA</option>
+                                                <option value="PB">PB</option>
+                                                <option value="PE">PE</option>
+                                                <option value="PI">PI</option>
+                                                <option value="PR">PR</option>
+                                                <option value="RJ">RJ</option>
+                                                <option value="RN">RN</option>
+                                                <option value="RO">RO</option>
+                                                <option value="RS">RS</option>
+                                                <option value="SC">SC</option>
+                                                <option value="SE">SE</option>
+                                                <option value="SP">SP</option>
+                                                <option value="TO">TO</option>
                                             </select>
                                         </div>
                                     </div>
+                                    
                                     
                                     <!-- SEX -->
                                     <div class="relative">
                                         <label for="sex" class="text-sm font-medium text-gray-300 block mb-1">Gender</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-venus-mars"></i></span>
-                                            <select name="sex" id="sex" required
+                                            <select name="SEX" id="SEX" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
                                                 <option value="" disabled selected>Select gender</option>
-                                                <option value="1">Male</option>
-                                                <option value="0">Female</option>
+                                                <option value="0">Male</option>
+                                                <option value="1">Female</option>
                                             </select>
                                         </div>
                                     </div>
@@ -151,21 +176,27 @@
                                         <label for="marital_status" class="text-sm font-medium text-gray-300 block mb-1">Marital Status</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-heart"></i></span>
-                                            <select name="marital_status" id="marital_status" required
+                                            <select name="MARITAL_STATUS" id="MARITAL_STATUS" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
                                                 <option value="" disabled selected>Select marital status</option>
-                                                <option value="single">Single</option>
-                                                <option value="other">Other</option>
+                                                <option value="1">Single</option>
+                                                <option value="2">Married</option>
+                                                <option value="3">Divorced</option>
+                                                <option value="4">Widowed</option>
+                                                <option value="5">Separated</option>
+                                                <option value="6">Domestic Partnership</option>
+                                                <option value="7">Civil Union</option>
+                                                <option value="8">Other</option>
                                             </select>
                                         </div>
                                     </div>
                                     
                                     <!-- RESIDENTIAL_STATE -->
                                     <div class="relative">
-                                        <label for="residential_state" class="text-sm font-medium text-gray-300 block mb-1">Residential State</label>
+                                        <label for="residencial_state" class="text-sm font-medium text-gray-300 block mb-1">Residential State</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-map-marker-alt"></i></span>
-                                            <select name="residential_state" id="residential_state" required
+                                            <select name="RESIDENCIAL_STATE" id="RESIDENCIAL_STATE" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
                                                 <option value="" disabled selected>Select state</option>
                                                 <option value="AL">AL</option>
@@ -196,7 +227,36 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <!-- MONTHS IN RESIDENCE -->
+                                    <div class="relative">
+                                        <label for="months_in_residence" class="text-sm font-medium text-gray-300 block mb-1">Months in Residence</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-home"></i></span>
+                                            <input type="number" name="MONTHS_IN_RESIDENCE" id="MONTHS_IN_RESIDENCE" min="0" max="228" placeholder="Enter months" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Enter number of months from 0-228</p>
+                                    </div>
 
+
+                                    <!-- RESIDENCE_TYPE -->
+                                    <div class="relative">
+                                        <label for="flag_residence" class="text-sm font-medium text-gray-300 block mb-1">Residence Type</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-building"></i></span>
+                                            <select name="RESIDENCE_TYPE" id="RESIDENCE_TYPE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select residence type</option>
+                                                <option value="1">Owned property</option>
+                                                <option value="2">Mortgaged property</option>
+                                                <option value="3">Rented property</option>
+                                                <option value="4">Living with parents</option>
+                                                <option value="5">Living with other family</option>
+                                                <option value="0">Other arrangement</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
                             </div>
 
@@ -209,58 +269,79 @@
                                 </h3>
                                 
                                 <div class="grid md:grid-cols-2 gap-4">
-                                    <!-- MONTHLY_INCOMES_TOT -->
-                                    <div class="relative">
-                                        <label for="monthly_income_tot" class="text-sm font-medium text-gray-300 block mb-1">Monthly Income</label>
-                                        <div class="flex items-center">
-                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-dollar-sign"></i></span>
-                                            <select name="monthly_income_tot" id="monthly_income_tot" required
-                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
-                                                <option value="" disabled selected>Select income range</option>
-                                                <option value="650-1320">$650 - $1,320</option>
-                                                <option value="1320-3323">$1,320 - $3,323</option>
-                                                <option value="3323-8560">$3,323 - $8,560</option>
-                                                <option value=">8560">Above $8,560</option>
-                                            </select>
-                                        </div>
-                                    </div>
                                     
-                                    <!-- PRODUCT -->
-                                    <div class="relative">
-                                        <label for="product" class="text-sm font-medium text-gray-300 block mb-1">Product Type</label>
-                                        <div class="flex items-center">
-                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-box"></i></span>
-                                            <select name="product" id="product" required
-                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
-                                                <option value="" disabled selected>Select product type</option>
-                                                <option value="2">Credit House</option>
-                                                <option value="7">Credit Car</option>
-                                            </select>
-                                        </div>
-                                    </div>
+
                                     
                                     <!-- PAYMENT_DAY -->
                                     <div class="relative">
                                         <label for="payment_day" class="text-sm font-medium text-gray-300 block mb-1">Payment Day</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-calendar-day"></i></span>
-                                            <select name="payment_day" id="payment_day" required
+                                            <select name="PAYMENT_DAY" id="PAYMENT_DAY" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
                                                 <option value="" disabled selected>Select payment period</option>
-                                                <option value="1">1st - 14th day of month</option>
-                                                <option value="0">15th - 30th day of month</option>
+                                                <option value="1">1st day of month</option>
+                                                <option value="5">5th day of month</option>
+                                                <option value="10">10th day of month</option>
+                                                <option value="15">15th day of month</option>
+                                                <option value="20">20th day of month</option>
+                                                <option value="25">25th day of month</option>
                                             </select>
                                         </div>
                                     </div>
-                                    
-                                    <!-- FLAG_COMPANY -->
-                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-30">
+
+                                    <!-- PROFESSION_CODE -->
+                                    <div class="relative">
+                                        <label for="profession_code" class="text-sm font-medium text-gray-300 block mb-1">Profession Code</label>
                                         <div class="flex items-center">
-                                            <input type="checkbox" name="flag_company" id="flag_company" value="1" 
-                                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                            <label for="flag_company" class="ml-2 block text-sm text-gray-300">Currently employed by a company</label>
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-id-badge"></i></span>
+                                            <select name="PROFESSION_CODE" id="PROFESSION_CODE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select profession code</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                            </select>
+
                                         </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Select the profession code from the available options</p>
                                     </div>
+
+                                    <!-- OCCUPATION_TYPE -->
+                                    <div class="relative">
+                                        <label for="occupation_type" class="text-sm font-medium text-gray-300 block mb-1">Occupation Type</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-briefcase"></i></span>
+                                            <select name="OCCUPATION_TYPE" id="OCCUPATION_TYPE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select occupation type</option>
+                                                <option value="1">Employed - Full Time</option>
+                                                <option value="2">Employed - Part Time</option>
+                                                <option value="3">Self-Employed</option>
+                                                <option value="4">Business Owner</option>
+                                                <option value="5">Retired/Pensioner</option>
+                                                <option value="NULL">Not Currently Employed</option>
+                                            </select>
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Employment status affects credit risk evaluation</p>
+                                    </div>
+
+                                    
                                 </div>
                             </div>
                             
@@ -271,28 +352,33 @@
                                 </h3>
                                 
                                 <div class="grid md:grid-cols-2 gap-4 mb-4">
-                                    <!-- FLAG_DEPENDANTS -->
-                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-30">
-                                        <div class="flex items-center">
-                                            <input type="checkbox" name="flag_dependants" id="flag_dependants" value="1"
-                                                class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                            <label for="flag_dependants" class="ml-2 block text-sm text-gray-300">Have dependants</label>
-                                        </div>
-                                    </div>
                                     
                                     <!-- QUANT_DEPENDANTS -->
                                     <div class="relative">
                                         <label for="quant_dependants" class="text-sm font-medium text-gray-300 block mb-1">Number of Dependents</label>
                                         <div class="flex items-center">
                                             <span class="absolute left-3 text-blue-400"><i class="fas fa-users"></i></span>
-                                            <select name="quant_dependants" id="quant_dependants" required
+                                            <select name="QUANT_DEPENDANTS" id="QUANT_DEPENDANTS" required
                                                 class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
                                                 <option value="" disabled selected>Select number</option>
-                                                <option value="1">1 dependent</option>
-                                                <option value="2">2 dependents</option>
-                                                <option value="3">3 dependents</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
                                             </select>
                                         </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Select the number of dependents</p>
                                     </div>
                                 </div>
                                 
@@ -300,29 +386,38 @@
                                     <h4 class="text-sm font-medium text-blue-400 border-b border-darkBorder pb-2">Contact Methods</h4>
                                     
                                     <div class="grid md:grid-cols-3 gap-2">
+                                    
                                         <!-- flag_residencial_phone -->
-                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
-                                            <input type="checkbox" name="flag_residencial_phone" id="flag_residencial_phone" value="1"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                            <label for="flag_residencial_phone" class="ml-2 block text-sm text-gray-300">Residential phone</label>
+                                        <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                            <label for="flag_residencial_phone" class="text-sm font-medium text-gray-300 block mb-1">Residential Phone</label>
+                                            <div class="flex items-center">
+                                                <span class="absolute left-5 text-blue-400"><i class="fas fa-phone-alt"></i></span>
+                                                <select name="FLAG_RESIDENCIAL_PHONE" id="FLAG_RESIDENCIAL_PHONE" required
+                                                    class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                    <option value="" disabled selected>Select option</option>
+                                                    <option value="Y">Yes</option>
+                                                    <option value="N">No</option>
+                                                </select>
+                                            </div>
                                         </div>
-                                        
                                         <!-- flag_professional_phone -->
-                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
-                                            <input type="checkbox" name="flag_professional_phone" id="flag_professional_phone" value="1"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                            <label for="flag_professional_phone" class="ml-2 block text-sm text-gray-300">Work phone</label>
+                                        <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                            <label for="flag_professional_phone" class="text-sm font-medium text-gray-300 block mb-1">Work Phone</label>
+                                            <div class="flex items-center">
+                                                <span class="absolute left-5 text-blue-400"><i class="fas fa-briefcase"></i></span>
+                                                <select name="FLAG_PROFESSIONAL_PHONE" id="FLAG_PROFESSIONAL_PHONE" required
+                                                    class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                    <option value="" disabled selected>Select option</option>
+                                                    <option value="Y">Yes</option>
+                                                    <option value="N">No</option>
+                                                </select>
+                                            </div>
                                         </div>
                                         
-                                        <!-- flag_email -->
-                                        <div class="flex items-center bg-darkBg bg-opacity-30 p-2 rounded-md">
-                                            <input type="checkbox" name="flag_email" id="flag_email" value="1"
-                                                class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                            <label for="flag_email" class="ml-2 block text-sm text-gray-300">Email address</label>
-                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        
                             
                             <!-- Assets Section -->
                             <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50">
@@ -331,53 +426,40 @@
                                 </h3>
                                 
                                 <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                    <!-- flag_cards -->
-                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
-                                        <input type="checkbox" name="flag_cards" id="flag_cards" value="1"
-                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                        <label for="flag_cards" class="ml-2 block text-sm text-gray-300">Credit cards</label>
+                                    <!-- flag_mastercard -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <label for="flag_mastercard" class="text-sm font-medium text-gray-300 block mb-1">Possesses Mastercard</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-5 text-blue-400"><i class="fas fa-credit-card"></i></span>
+                                            <select name="FLAG_MASTERCARD" id="FLAG_MASTERCARD" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select option</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                
+                                    
+                                    <!-- quant_banking_accounts -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <label for="quant_banking_accounts" class="text-sm font-medium text-gray-300 block mb-1">Banking Accounts</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-6 top-11 text-blue-400"><i class="fas fa-university"></i></span>
+                                            <select name="QUANT_BANKING_ACCOUNTS" id="QUANT_BANKING_ACCOUNTS" required
+                                                class="w-full pl-10 pr-10 py-2 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select option</option>
+                                                <option value="0">No accounts</option>
+                                                <option value="1">1 account</option>
+                                                <option value="2">2+ accounts</option>
+                                            </select>
+                                        </div>
                                     </div>
                                     
-                                    <!-- flag_residence -->
-                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
-                                        <input type="checkbox" name="flag_residence" id="flag_residence" value="1"
-                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                        <label for="flag_residence" class="ml-2 block text-sm text-gray-300">Own residence</label>
-                                    </div>
-                                    
-                                    <!-- flag_banking_accounts -->
-                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
-                                        <input type="checkbox" name="flag_banking_accounts" id="flag_banking_accounts" value="1"
-                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                        <label for="flag_banking_accounts" class="ml-2 block text-sm text-gray-300">Banking accounts</label>
-                                    </div>
-                                    
-                                    <!-- flag_personal_assets -->
-                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
-                                        <input type="checkbox" name="flag_personal_assets" id="flag_personal_assets" value="1"
-                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                        <label for="flag_personal_assets" class="ml-2 block text-sm text-gray-300">Personal assets</label>
-                                    </div>
-                                    
-                                    <!-- flag_cars -->
-                                    <div class="flex items-center bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
-                                        <input type="checkbox" name="flag_cars" id="flag_cars" value="1"
-                                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                        <label for="flag_cars" class="ml-2 block text-sm text-gray-300">Own vehicle(s)</label>
-                                    </div>
                                 </div>
                             </div>
                             
-                            <!-- Terms condition / checkbox -->
-                            <div class="mt-6 p-4 bg-blue-900 bg-opacity-20 rounded-lg border border-blue-800 border-opacity-30">
-                                <div class="flex items-center">
-                                    <input type="checkbox" name="agree-term" id="agree-term" required
-                                        class="h-5 w-5 text-blue-600 focus:ring-blue-500 bg-darkBg border-darkBorder rounded">
-                                    <label for="agree-term" class="ml-2 block text-sm text-gray-300">
-                                        I agree to all statements in the <a href="#" class="text-blue-400 hover:underline font-medium">Terms of Service</a>
-                                    </label>
-                                </div>
-                            </div>
+
                             
                             <!-- Submit button -->
                             <div class="mt-8">
