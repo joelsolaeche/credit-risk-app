@@ -23,7 +23,7 @@ db = redis.Redis(
 )
 
 
-def load_model(filename):
+def load_pipeline(filename):
     """
     Load a trained machine learning model from a file.
 
@@ -41,12 +41,12 @@ def load_model(filename):
         # Open the file in binary read mode
         with open(filename, "rb") as f:
             # Load the pickled model object from the file
-            model_tmp = pickle.load(f)
+            pipeline = pickle.load(f)
             # logger.info("model:", model_tmp)
     else:
         raise FileNotFoundError(f"The file {filename} does not exist.")
 
-    return model_tmp.best_estimator_, model_tmp.best_score_
+    return pipeline
 
 def predict(data):
     """
@@ -60,43 +60,23 @@ def predict(data):
 
     Returns:
     - model_name (str): Name of the loaded machine learning model.
-    - model_score (float): Best score achieved by the loaded model during training.
-    - class_name (str): Predicted class name for the input data.
+    - class_name (int): Predicted class name for the input data.
     - pred_probability (float): Predicted probability of the predicted class.
     """
     
-    # Initialize variables for storing prediction results
-    class_name = None
-    pred_probability = None
 
     # Define the path of the trained model file
-    model_file_path = "logistic_regression.pk"
+    pipeline_file_path = "predict_model.pk"
 
     # Load the pre-trained model and its best score
-    model, model_score = load_model(model_file_path)
+    pipeline = load_pipeline(pipeline_file_path)
 
-    # Convert input data into a numpy array
-    x = np.array(data)
-    #logger.info(f"data is: {x}")
-    #logger.info(f"Size of data is: {x.shape}")
-
-    # Reshape the input data to match the model's expected format (one sample)
-    x_sample = x.reshape(1, -1)
-
-    # Make predictions using the loaded model
-    class_name = model.predict(x_sample)[0]
-    pred_probability = model.predict_proba(x_sample)[0]
-
-    # Get the index of the predicted class in the probability array
-    idx_prob = np.where(model.classes_ == class_name)[0][0]
-    pred_probability = pred_probability[idx_prob]
-
-    # Get the name of the loaded model's class and round the model score
-    model_name = model.__class__.__name__
-    model_score = round(model_score, 2)
+    prediction = pipeline.predict(data)  # Predicted class (0 or 1)
+    probability = pipeline.predict_proba(data)[:, 0]  # Probability of class 0
+    model_name = type(pipeline.named_steps['classifier']).__name__
 
     # Return the prediction results
-    return model_name, model_score, class_name, pred_probability
+    return model_name, prediction, probability
 
 def classify_process():
     """
@@ -123,14 +103,13 @@ def classify_process():
 
             # Run ML model on the given data
             newmsg = json.loads(msg_queue)
-            model_name, model_score, class_name, pred_probability = predict(
+            model_name, class_name, pred_probability = predict(
                 newmsg["data"]
             )
 
             # Store model prediction in a dictionary
             res_dict = {
                 "model_name": model_name,
-                "model_score": model_score,
                 "prediction": str(class_name),
                 "score": round(np.float64(pred_probability), 2),
             }
