@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Credit Analysis Risk</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/images/financial-profit.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0f172a', /* Deeper blue background */
+                        darkCard: '#1e293b', /* Richer card background */
+                        darkBorder: '#334155', /* Higher contrast border */
+                        accent: '#3b82f6', /* Primary accent color */
+                        accentHover: '#2563eb' /* Darker accent for hover */
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Custom styles -->
+    <style>
+        .gradient-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .input-focus:focus {
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25);
+        }
+        
+        .form-section {
+            transition: all 0.3s ease;
+        }
+        
+        .form-section:hover {
+            transform: translateY(-2px);
+        }
+        
+        select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23939393'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-position: right 0.75rem center;
+            background-repeat: no-repeat;
+            background-size: 1rem;
+        }
+    </style>
+</head>
+
+<body class="bg-darkBg text-gray-100 font-sans">
+    <div class="min-h-screen py-12">
+        <!-- App header with subtle animation -->
+        <header class="max-w-3xl mx-auto mb-8 text-center">
+            <h1 class="text-4xl font-bold gradient-header tracking-tight mb-2">Credit Risk Analysis</h1>
+            <p class="text-blue-300 text-opacity-80">Smart decisions with machine learning</p>
+        </header>
+
+        <!-- Image -->
+        <div class="max-w-3xl mx-auto mb-10">
+            <div class="relative h-48 overflow-hidden rounded-lg shadow-xl">
+                <!-- Image container with overlay -->
+                <div class="absolute inset-0 bg-gradient-to-r from-blue-900/50 to-darkBg/70 z-10"></div>
+                <img src="/static/images/unnamed.png" alt="Credit Analysis Visualization" 
+                    class="w-full h-full object-cover">
+                
+                <!-- Optional text overlay -->
+                <div class="absolute bottom-0 left-0 right-0 p-4 text-white z-20">
+                    <p class="text-lg font-medium">Make informed lending decisions</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Applicant form -->
+        <section class="max-w-3xl mx-auto">
+            <div class="bg-darkCard rounded-xl shadow-2xl overflow-hidden border border-darkBorder">
+                <!-- Form progress indicator -->
+                <div class="bg-gradient-to-r from-blue-600 to-blue-400 h-1"></div>
+                
+                <div class="p-8">
+                    <div>
+                        <form action="/prediction" method="POST" class="space-y-6 register-form" id="register-form">
+                            <!-- Form sections with visual grouping -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50 mb-6">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-user-circle mr-2"></i>Personal Information
+                                </h3>
+
+                                <!-- Personal information -->
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    
+                                    <!-- NAME -->
+                                    <div class="relative">
+                                        <label for="name" class="text-sm font-medium text-gray-300 block mb-1">Full Name</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-user"></i></span>
+                                            <input type="text" name="NAME" id="NAME" placeholder="Client's Name" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                    </div>
+
+
+                                    <!-- AGE -->
+                                    <div class="relative">
+                                        <label for="age" class="text-sm font-medium text-gray-300 block mb-1">Age</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-user-clock"></i></span>
+                                            <input type="number" name="AGE" id="AGE" min="18" max="99" placeholder="Enter age (18-99)" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Enter applicant's age (between 18-99)</p>
+                                    </div>
+
+                                    <!-- STATE_OF_BIRTH -->
+                                    <div class="relative">
+                                        <label for="state_of_birth" class="text-sm font-medium text-gray-300 block mb-1">Birth State</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-map-pin"></i></span>
+                                            <select name="STATE_OF_BIRTH" id="STATE_OF_BIRTH" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select birth state</option>
+                                                <option value="AL">AL</option>
+                                                <option value="AM">AM</option>
+                                                <option value="AP">AP</option>
+                                                <option value="BA">BA</option>
+                                                <option value="CE">CE</option>
+                                                <option value="DF">DF</option>
+                                                <option value="ES">ES</option>
+                                                <option value="GO">GO</option>
+                                                <option value="MA">MA</option>
+                                                <option value="MG">MG</option>
+                                                <option value="MS">MS</option>
+                                                <option value="MT">MT</option>
+                                                <option value="PA">PA</option>
+                                                <option value="PB">PB</option>
+                                                <option value="PE">PE</option>
+                                                <option value="PI">PI</option>
+                                                <option value="PR">PR</option>
+                                                <option value="RJ">RJ</option>
+                                                <option value="RN">RN</option>
+                                                <option value="RO">RO</option>
+                                                <option value="RS">RS</option>
+                                                <option value="SC">SC</option>
+                                                <option value="SE">SE</option>
+                                                <option value="SP">SP</option>
+                                                <option value="TO">TO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    
+                                    <!-- SEX -->
+                                    <div class="relative">
+                                        <label for="sex" class="text-sm font-medium text-gray-300 block mb-1">Gender</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-venus-mars"></i></span>
+                                            <select name="SEX" id="SEX" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select gender</option>
+                                                <option value="0">Male</option>
+                                                <option value="1">Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- MARITAL_STATUS -->
+                                    <div class="relative">
+                                        <label for="marital_status" class="text-sm font-medium text-gray-300 block mb-1">Marital Status</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-heart"></i></span>
+                                            <select name="MARITAL_STATUS" id="MARITAL_STATUS" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select marital status</option>
+                                                <option value="0">Single</option>
+                                                <option value="1">Married</option>
+                                                <option value="2">Divorced</option>
+                                                <option value="3">Widowed</option>
+                                                <option value="4">Separated</option>
+                                                <option value="5">Domestic Partnership</option>
+                                                <option value="6">Civil Union</option>
+                                                <option value="7">Other</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- RESIDENTIAL_STATE -->
+                                    <div class="relative">
+                                        <label for="residencial_state" class="text-sm font-medium text-gray-300 block mb-1">Residential State</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-map-marker-alt"></i></span>
+                                            <select name="RESIDENCIAL_STATE" id="RESIDENCIAL_STATE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select state</option>
+                                                <option value="AL">AL</option>
+                                                <option value="AM">AM</option>
+                                                <option value="AP">AP</option>
+                                                <option value="BA">BA</option>
+                                                <option value="CE">CE</option>
+                                                <option value="DF">DF</option>
+                                                <option value="ES">ES</option>
+                                                <option value="GO">GO</option>
+                                                <option value="MA">MA</option>
+                                                <option value="MG">MG</option>
+                                                <option value="MS">MS</option>
+                                                <option value="MT">MT</option>
+                                                <option value="PA">PA</option>
+                                                <option value="PB">PB</option>
+                                                <option value="PE">PE</option>
+                                                <option value="PI">PI</option>
+                                                <option value="PR">PR</option>
+                                                <option value="RJ">RJ</option>
+                                                <option value="RN">RN</option>
+                                                <option value="RO">RO</option>
+                                                <option value="RS">RS</option>
+                                                <option value="SC">SC</option>
+                                                <option value="SE">SE</option>
+                                                <option value="SP">SP</option>
+                                                <option value="TO">TO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!-- MONTHS IN RESIDENCE -->
+                                    <div class="relative">
+                                        <label for="months_in_residence" class="text-sm font-medium text-gray-300 block mb-1">Months in Residence</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-home"></i></span>
+                                            <input type="number" name="MONTHS_IN_RESIDENCE" id="MONTHS_IN_RESIDENCE" min="0" max="228" placeholder="Enter months" required
+                                                class="w-full pl-10 pr-3 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 input-focus">
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Enter number of months from 0-228</p>
+                                    </div>
+
+
+                                    <!-- RESIDENCE_TYPE -->
+                                    <div class="relative">
+                                        <label for="flag_residence" class="text-sm font-medium text-gray-300 block mb-1">Residence Type</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-building"></i></span>
+                                            <select name="RESIDENCE_TYPE" id="RESIDENCE_TYPE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select residence type</option>
+                                                <option value="0">Owned property</option>
+                                                <option value="1">Mortgaged property</option>
+                                                <option value="2">Rented property</option>
+                                                <option value="3">Living with parents</option>
+                                                <option value="4">Living with other family</option>
+                                                <option value="5">Other arrangement</option>
+                                            </select>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                            
+                            <!-- Financial Information Section -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50 mb-6">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-money-bill-wave mr-2"></i>Financial Information
+                                </h3>
+                                
+                                <div class="grid md:grid-cols-2 gap-4">
+                                    
+
+                                    
+                                    <!-- PAYMENT_DAY -->
+                                    <div class="relative">
+                                        <label for="payment_day" class="text-sm font-medium text-gray-300 block mb-1">Payment Day</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-calendar-day"></i></span>
+                                            <select name="PAYMENT_DAY" id="PAYMENT_DAY" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select payment period</option>
+                                                <option value="1">1st day of month</option>
+                                                <option value="5">5th day of month</option>
+                                                <option value="10">10th day of month</option>
+                                                <option value="15">15th day of month</option>
+                                                <option value="20">20th day of month</option>
+                                                <option value="25">25th day of month</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- PROFESSION_CODE -->
+                                    <div class="relative">
+                                        <label for="profession_code" class="text-sm font-medium text-gray-300 block mb-1">Profession Code</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-id-badge"></i></span>
+                                            <select name="PROFESSION_CODE" id="PROFESSION_CODE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select profession code</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                            </select>
+
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Select the profession code from the available options</p>
+                                    </div>
+
+                                    <!-- OCCUPATION_TYPE -->
+                                    <div class="relative">
+                                        <label for="occupation_type" class="text-sm font-medium text-gray-300 block mb-1">Occupation Type</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-briefcase"></i></span>
+                                            <select name="OCCUPATION_TYPE" id="OCCUPATION_TYPE" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select occupation type</option>
+                                                <option value="0">Not Currently Employed</option>
+                                                <option value="1">Employed - Full Time</option>
+                                                <option value="2">Employed - Part Time</option>
+                                                <option value="3">Self-Employed</option>
+                                                <option value="4">Business Owner</option>
+                                                <option value="5">Retired/Pensioner</option>
+                                                
+                                            </select>
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Employment status affects credit risk evaluation</p>
+                                    </div>
+
+                                    
+                                </div>
+                            </div>
+                            
+                            <!-- Family & Contact Information -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-users mr-2"></i>Family & Contact Information
+                                </h3>
+                                
+                                <div class="grid md:grid-cols-2 gap-4 mb-4">
+                                    
+                                    <!-- QUANT_DEPENDANTS -->
+                                    <div class="relative">
+                                        <label for="quant_dependants" class="text-sm font-medium text-gray-300 block mb-1">Number of Dependents</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-3 text-blue-400"><i class="fas fa-users"></i></span>
+                                            <select name="QUANT_DEPENDANTS" id="QUANT_DEPENDANTS" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select number</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                            </select>
+                                        </div>
+                                        <p class="mt-1 text-xs text-gray-400 italic">Select the number of dependents</p>
+                                    </div>
+                                </div>
+                                
+                                <div class="space-y-3 mt-4">
+                                    <h4 class="text-sm font-medium text-blue-400 border-b border-darkBorder pb-2">Contact Methods</h4>
+                                    
+                                    <div class="grid md:grid-cols-3 gap-2">
+                                    
+                                        <!-- flag_residencial_phone -->
+                                        <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                            <label for="flag_residencial_phone" class="text-sm font-medium text-gray-300 block mb-1">Residential Phone</label>
+                                            <div class="flex items-center">
+                                                <span class="absolute left-5 text-blue-400"><i class="fas fa-phone-alt"></i></span>
+                                                <select name="FLAG_RESIDENCIAL_PHONE" id="FLAG_RESIDENCIAL_PHONE" required
+                                                    class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                    <option value="" disabled selected>Select option</option>
+                                                    <option value="Y">Yes</option>
+                                                    <option value="N">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <!-- flag_professional_phone -->
+                                        <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                            <label for="flag_professional_phone" class="text-sm font-medium text-gray-300 block mb-1">Work Phone</label>
+                                            <div class="flex items-center">
+                                                <span class="absolute left-5 text-blue-400"><i class="fas fa-briefcase"></i></span>
+                                                <select name="FLAG_PROFESSIONAL_PHONE" id="FLAG_PROFESSIONAL_PHONE" required
+                                                    class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                    <option value="" disabled selected>Select option</option>
+                                                    <option value="Y">Yes</option>
+                                                    <option value="N">No</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        
+                            
+                            <!-- Assets Section -->
+                            <div class="form-section p-6 bg-darkBg bg-opacity-50 rounded-lg border border-darkBorder border-opacity-50">
+                                <h3 class="text-xl font-semibold text-blue-400 mb-4 flex items-center">
+                                    <i class="fas fa-home mr-2"></i>Assets & Properties
+                                </h3>
+                                
+                                <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                    <!-- flag_mastercard -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <label for="flag_mastercard" class="text-sm font-medium text-gray-300 block mb-1">Possesses Mastercard</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-5 text-blue-400"><i class="fas fa-credit-card"></i></span>
+                                            <select name="FLAG_MASTERCARD" id="FLAG_MASTERCARD" required
+                                                class="w-full pl-10 pr-10 py-2.5 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select option</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                
+                                    
+                                    <!-- quant_banking_accounts -->
+                                    <div class="relative bg-darkBg bg-opacity-30 p-3 rounded-md border border-darkBorder border-opacity-20">
+                                        <label for="quant_banking_accounts" class="text-sm font-medium text-gray-300 block mb-1">Banking Accounts</label>
+                                        <div class="flex items-center">
+                                            <span class="absolute left-6 top-11 text-blue-400"><i class="fas fa-university"></i></span>
+                                            <select name="QUANT_BANKING_ACCOUNTS" id="QUANT_BANKING_ACCOUNTS" required
+                                                class="w-full pl-10 pr-10 py-2 bg-darkBg border border-darkBorder rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-200 appearance-none input-focus">
+                                                <option value="" disabled selected>Select option</option>
+                                                <option value="0">No accounts</option>
+                                                <option value="1">1 account</option>
+                                                <option value="2">2+ accounts</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            
+
+                            
+                            <!-- Submit button -->
+                            <div class="mt-8">
+                                <button type="submit" 
+                                    class="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white py-3.5 px-4 rounded-lg hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-[1.02] font-medium text-lg shadow-lg flex items-center justify-center">
+                                    <i class="fas fa-chart-line mr-2"></i>Analyze Credit Risk
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Footer -->
+                <div class="px-8 py-5 bg-gradient-to-r from-darkBg to-darkCard text-center text-gray-400 text-xs">
+                    <p>© 2025 Credit Analysis Risk Application • Powered by Anyone AI</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.form-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                
+                setTimeout(() => {
+                    section.style.transition = 'all 0.5s ease';
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100 * (index + 1));
+            });
+        });
+    </script>
+</body>
+
+</html>
