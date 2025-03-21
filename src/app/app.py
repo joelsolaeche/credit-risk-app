@@ -430,22 +430,22 @@ async def get_loan_prediction_form(request: Request):
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "name": {"type": "string", "example": "John Doe", "description": "Customer's full name"},
-                            "age": {"type": "integer", "example": 49, "description": "Applicant's age at the moment of submission"},
-                            "sex": {"type": "string", "example": "F", "description": "Gender (M=Male, F=Female)"},
-                            "marital_status": {"type": "integer", "example": 2, "description": "Marital status (encoding not informed)"},
-                            "payment_day": {"type": "integer", "example": 20, "description": "Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25)"},
-                            "residential_state": {"type": "string", "example": "CE", "description": "State of residence"},
-                            "months_in_residence": {"type": "float", "example": 18.0, "description": "Time in the current residence in months"},
-                            "profession_code": {"type": "float", "example": 2.0, "description": "Applicant's profession code (encoding not informed)"},
-                            "quant_banking_accounts": {"type": "integer", "example": 0, "description": "Number of banking accounts (0,1,2)"},
-                            "quant_dependants": {"type": "integer", "example": 1, "description": "Number of dependants (0, 1, 2, ...)"},
-                            "residence_type": {"type": "float", "example": 1.0, "description": "Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.)"},
-                            "state_of_birth": {"type": "string", "example": "CE", "description": "State of birth (Brazilian states, XX, missing)"},
-                            "occupation_type": {"type": "float", "example": 4.0, "description": "Occupation type (encoding not informed)"},
-                            "flag_mastercard": {"type": "integer", "example": 1, "description": "Flag indicating if the applicant is a MASTERCARD credit card holder (0.1)"},
-                            "flag_residencial_phone": {"type": "string", "example": "N", "description": "Indicates if the applicant possesses a home phone (Y,N)"},
-                            "flag_professional_phone": {"type": "string", "example": "Y", "description": "Indicates if the professional phone number was supplied (Y,N)"}
+                            "NAME": {"type": "string", "example": "John Doe", "description": "Customer's full name"},
+                            "AGE": {"type": "integer", "example": 49, "description": "Applicant's age at the moment of submission"},
+                            "SEX": {"type": "string", "example": "F", "description": "Gender (M=Male, F=Female)"},
+                            "MARITAL_STATUS": {"type": "integer", "example": 2, "description": "Marital status (encoding not informed)"},
+                            "PAYMENT_DAY": {"type": "integer", "example": 20, "description": "Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25)"},
+                            "RESIDENCIAL_STATE": {"type": "string", "example": "CE", "description": "State of residence"},
+                            "MONTHS_IN_RESIDENCE": {"type": "float", "example": 18.0, "description": "Time in the current residence in months"},
+                            "PROFESSION_CODE": {"type": "float", "example": 2.0, "description": "Applicant's profession code (encoding not informed)"},
+                            "QUANT_BANKING_ACCOUNTS": {"type": "integer", "example": 0, "description": "Number of banking accounts (0,1,2)"},
+                            "QUANT_DEPENDANTS": {"type": "integer", "example": 1, "description": "Number of dependants (0, 1, 2, ...)"},
+                            "RESIDENCE_TYPE": {"type": "float", "example": 1.0, "description": "Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.)"},
+                            "STATE_OF_BIRTH": {"type": "string", "example": "CE", "description": "State of birth (Brazilian states, XX, missing)"},
+                            "OCCUPATION_TYPE": {"type": "float", "example": 4.0, "description": "Occupation type (encoding not informed)"},
+                            "FLAG_MASTERCARD": {"type": "integer", "example": 1, "description": "Flag indicating if the applicant is a MASTERCARD credit card holder (0.1)"},
+                            "FLAG_RESIDENCIAL_PHONE": {"type": "string", "example": "N", "description": "Indicates if the applicant possesses a home phone (Y,N)"},
+                            "FLAG_PROFESSIONAL_PHONE": {"type": "string", "example": "Y", "description": "Indicates if the professional phone number was supplied (Y,N)"}
                         }
                     }
                 }
@@ -455,44 +455,44 @@ async def get_loan_prediction_form(request: Request):
 )
 async def predict(
     request: Request,
-    name: str = Form(..., description="Customer's full name"),
-    age: int = Form(..., description="Applicant's age at the moment of submission"),
-    sex: str = Form(..., description="Gender (M=Male, F=Female)"),
-    marital_status: int = Form(..., description="Marital status (encoding not informed)"),
-    payment_day: int = Form(..., description="Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25)"),
-    residential_state: str = Form(..., description="State of residence"),
-    months_in_residence: float = Form(..., description="Time in the current residence in months"),
-    profession_code: float = Form(..., description="Applicant's profession code (encoding not informed)"),
-    quant_banking_accounts: int = Form(..., description="Number of banking accounts (0,1,2)"),
-    quant_dependants: int = Form(..., description="Number of dependants (0, 1, 2, ...)"),
-    residence_type: float = Form(..., description="Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.)"),
-    state_of_birth: str = Form(..., description="State of birth (Brazilian states, XX, missing)"),
-    occupation_type: float = Form(..., description="Occupation type (encoding not informed)"),
-    flag_mastercard: int = Form(..., description="Flag indicating if the applicant is a MASTERCARD credit card holder (0.1)"),
-    flag_residencial_phone: str = Form(..., description="Indicates if the applicant possesses a home phone (Y,N)"),
-    flag_professional_phone: str = Form(..., description="Indicates if the professional phone number was supplied (Y,N)"),
+    NAME: str = Form(..., description="Customer's full name"),
+    AGE: int = Form(..., description="Applicant's age at the moment of submission"),
+    SEX: str = Form(..., description="Gender (M=Male, F=Female)"),
+    MARITAL_STATUS: int = Form(..., description="Marital status (encoding not informed)"),
+    PAYMENT_DAY: int = Form(..., description="Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25)"),
+    RESIDENCIAL_STATE: str = Form(..., description="State of residence"),
+    MONTHS_IN_RESIDENCE: float = Form(..., description="Time in the current residence in months"),
+    PROFESSION_CODE: float = Form(..., description="Applicant's profession code (encoding not informed)"),
+    QUANT_BANKING_ACCOUNTS: int = Form(..., description="Number of banking accounts (0,1,2)"),
+    QUANT_DEPENDANTS: int = Form(..., description="Number of dependants (0, 1, 2, ...)"),
+    RESIDENCE_TYPE: float = Form(..., description="Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.)"),
+    STATE_OF_BIRTH: str = Form(..., description="State of birth (Brazilian states, XX, missing)"),
+    OCCUPATION_TYPE: float = Form(..., description="Occupation type (encoding not informed)"),
+    FLAG_MASTERCARD: int = Form(..., description="Flag indicating if the applicant is a MASTERCARD credit card holder (0.1)"),
+    FLAG_RESIDENCIAL_PHONE: str = Form(..., description="Indicates if the applicant possesses a home phone (Y,N)"),
+    FLAG_PROFESSIONAL_PHONE: str = Form(..., description="Indicates if the professional phone number was supplied (Y,N)"),
 ):
     """
     Handle user's credit prediction request using a machine learning model.
 
     Parameters:
     - request (Request): FastAPI request object.
-    - name (str): User's name.
-    - age (int): Applicant's age at the moment of submission.
-    - sex (str): Gender (M=Male, F=Female).
-    - marital_status (int): Marital status (encoding not informed).
-    - payment_day (int): Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25).
-    - residential_state (str): State of residence.
-    - months_in_residence (float): Time in the current residence in months.
-    - profession_code (float): Applicant's profession code (encoding not informed).
-    - quant_banking_accounts (int): Number of banking accounts (0,1,2).
-    - quant_dependants (int): Number of dependants (0, 1, 2, ...).
-    - residence_type (float): Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.).
-    - state_of_birth (str): State of birth (Brazilian states, XX, missing).
-    - occupation_type (float): Occupation type (encoding not informed).
-    - flag_mastercard (int): Flag indicating if the applicant is a MASTERCARD credit card holder (0.1).
-    - flag_residencial_phone (str): Indicates if the applicant possesses a home phone (Y,N).
-    - flag_professional_phone (str): Indicates if the professional phone number was supplied (Y,N).
+    - NAME (str): User's name.
+    - AGE (int): Applicant's age at the moment of submission.
+    - SEX (str): Gender (M=Male, F=Female).
+    - MARITAL_STATUS (int): Marital status (encoding not informed).
+    - PAYMENT_DAY (int): Day of the month for bill payment, chosen by the applicant (1,5,10,15,20,25).
+    - RESIDENCIAL_STATE (str): State of residence.
+    - MONTHS_IN_RESIDENCE (float): Time in the current residence in months.
+    - PROFESSION_CODE (float): Applicant's profession code (encoding not informed).
+    - QUANT_BANKING_ACCOUNTS (int): Number of banking accounts (0,1,2).
+    - QUANT_DEPENDANTS (int): Number of dependants (0, 1, 2, ...).
+    - RESIDENCE_TYPE (float): Type of residence (encoding not informed: owned, mortgage, rented, parents, family, etc.).
+    - STATE_OF_BIRTH (str): State of birth (Brazilian states, XX, missing).
+    - OCCUPATION_TYPE (float): Occupation type (encoding not informed).
+    - FLAG_MASTERCARD (int): Flag indicating if the applicant is a MASTERCARD credit card holder (0.1).
+    - FLAG_RESIDENCIAL_PHONE (str): Indicates if the applicant possesses a home phone (Y,N).
+    - FLAG_PROFESSIONAL_PHONE (str): Indicates if the professional phone number was supplied (Y,N).
 
     Returns:
     - TemplateResponse: FastAPI template response containing prediction outcome.
@@ -511,6 +511,8 @@ async def predict(
               "OCCUPATION_TYPE", "MARITAL_STATUS"]
 
     ordered_values = [remaining[key] for key in keys_order]
+
+    
 
     # Generate an id for the classification then
     data_message = {"id": str(uuid.uuid4()), "data": ordered_values}

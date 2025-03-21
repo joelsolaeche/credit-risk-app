@@ -5,6 +5,7 @@ import pickle
 import os
 import logging
 import numpy as np
+import pandas as pd
 
 from dotenv import load_dotenv
 
@@ -66,15 +67,37 @@ def predict(data):
     
 
     # Define the path of the trained model file
-    pipeline_file_path = "predict_model.pk"
+    pipeline_file_path = "predict_model.pkl"
 
     # Load the pre-trained model and its best score
     pipeline = load_pipeline(pipeline_file_path)
 
-    prediction = pipeline.predict(data)  # Predicted class (0 or 1)
-    probability = pipeline.predict_proba(data)[:, 0]  # Probability of class 0
+    keys_order = ["FLAG_MASTERCARD", "FLAG_RESIDENCIAL_PHONE", "FLAG_PROFESSIONAL_PHONE", "SEX", "AGE", 
+              "MONTHS_IN_RESIDENCE", "PAYMENT_DAY", "PROFESSION_CODE", "QUANT_BANKING_ACCOUNTS", 
+              "QUANT_DEPENDANTS", "RESIDENCE_TYPE", "RESIDENCIAL_STATE", "STATE_OF_BIRTH", 
+              "OCCUPATION_TYPE", "MARITAL_STATUS"]
+    
+    #["MONTHS_IN_RESIDENCE","PROFESSION_CODE","RESIDENCE_TYPE","OCCUPATION_TYPE"]
+    
+    df = pd.DataFrame([data],
+                         columns=keys_order)
+    
+    float_columns = ["MONTHS_IN_RESIDENCE", "PROFESSION_CODE", "RESIDENCE_TYPE", "OCCUPATION_TYPE"]
+    df[float_columns] = df[float_columns].astype(float)
+
+    # Convert columns to integer
+    int_columns = ["FLAG_MASTERCARD", "AGE", "PAYMENT_DAY", "QUANT_BANKING_ACCOUNTS", "QUANT_DEPENDANTS", "MARITAL_STATUS"]
+    df[int_columns] = df[int_columns].astype(int)
+    
+
+
+
+    prediction = pipeline.predict(df)[0]  # Predicted class (0 or 1)
+    probability = pipeline.predict_proba(df)[:, 0][0]  # Probability of class 0
     model_name = type(pipeline.named_steps['classifier']).__name__
 
+
+    
     # Return the prediction results
     return model_name, prediction, probability
 
@@ -103,6 +126,8 @@ def classify_process():
 
             # Run ML model on the given data
             newmsg = json.loads(msg_queue)
+
+
             model_name, class_name, pred_probability = predict(
                 newmsg["data"]
             )
@@ -111,7 +136,7 @@ def classify_process():
             res_dict = {
                 "model_name": model_name,
                 "prediction": str(class_name),
-                "score": round(np.float64(pred_probability), 2),
+                "score": round(np.float64(pred_probability), 2)
             }
 
             # Store the results on Redis using the original job ID as the key
