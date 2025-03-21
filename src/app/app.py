@@ -548,7 +548,7 @@ async def predict(
             name=user_name, proba=score
         )
     else:
-        prediction = "Dear {name}, your loan is approved!".format(name = user_name)
+        prediction = "Dear {name}, your loan is approved!\n with a probability of {proba}".format(name = user_name, proba=score)
 
     context = {
         "request": request,
