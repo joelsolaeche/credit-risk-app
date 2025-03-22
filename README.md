@@ -8,7 +8,7 @@ This application is a Credit Risk Analysis system that uses Machine Learning to 
 
 ## Team Members
 - [Pedro Guale González](https://github.com/Pedronet1997)
-- [Carlos Ilich](https://github.com/carlosilich)
+- [Carlos Carro](https://github.com/carlosilich)
 - [Mario Zamora](https://github.com/MarioZalem)
 - [Kevin Ordoñez](https://github.com/Vashomaru) 
 - [Joel Andres Solaeche](https://github.com/joelsolaeche) 
