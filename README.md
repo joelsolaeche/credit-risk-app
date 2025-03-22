@@ -14,20 +14,47 @@ This application is a Credit Risk Analysis system that uses Machine Learning to 
 - [Joel Andres Solaeche](https://github.com/joelsolaeche) 
 - [Miguel Callo Luque](https://github.com/migueluap)
 
+## Architecture
+
+The application follows a microservices architecture pattern using Docker Compose:
+
+![Architecture Diagram](src/app/static/images/architecture_diagram.JPG)
+
+### Components:
+
+1. **FastAPI Service (app container)**
+   - Handles web interface and user authentication with JWT
+   - Processes form submissions and communicates with Redis
+
+2. **Redis Service (redis container)**
+   - Acts as message broker between services
+   - Stores temporary prediction data and task queue
+
+3. **ML Service (model container)**
+   - Loads pre-trained machine learning models
+   - Processes prediction requests from Redis queue
+   - Returns prediction results
+
+### Data Flow:
+1. Users submit loan applications through the web interface
+2. FastAPI server queues tasks in Redis
+3. ML service retrieves tasks from Redis
+4. ML service processes data and returns results to Redis
+5. FastAPI retrieves and displays results to users
+
+This architecture allows for scalability and separation of concerns between the web application and machine learning components.
+
+
 ## Project Structure
 ```
 Credit-Risk-App/
 ├── notebooks/                     # Jupyter notebooks for model development
-│   ├── ci_data_cleanup.ipynb     # Data cleaning and preprocessing
-│   ├── lightgbm_model.ipynb      # LightGBM model implementation
-│   ├── logistic_regression_model.ipynb  # Logistic Regression model
-│   ├── random_forest_model.ipynb # Random Forest model
-│   ├── xgboost_model.ipynb      # XGBoost model implementation
-│   ├── SGDClassifier_model.ipynb # Stochastic Gradient Descent model
-│   ├── ML_model.ipynb           # General ML model experiments
-│   ├── pg_initial_dataset_scan.ipynb  # Initial data exploration
-│   ├── pg_EDA.ipynb             # Exploratory Data Analysis
-│   └── ko_pipeline.ipynb        # Model pipeline development
+│   ├── 1_ci_data_cleanup.ipynb     # Data cleaning and preprocessing
+│   ├── 2_logistic_regression_model.ipynb  # Logistic Regression model
+│   ├── 3_lightgbm_model.ipynb      # LightGBM model implementation
+│   ├── 4_xgboost_model.ipynb      # XGBoost model implementation
+│   ├── 5_model_pipeline.ipynb        # Model pipeline development
+│   └── practice_not_use_to_model/  # Additional experimental notebooks
 │
 ├── src/                         # Source code for the application
 │   ├── app/                     # FastAPI web application
