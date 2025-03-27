@@ -250,11 +250,13 @@ async def predict(
 
     # Determine the output message
     if int(prediction) == 1:
-        prediction = "Dear {name}, your loan is rejected!\n with a score of {proba}".format(
-            name=user_name, proba=score
+        prediction = "Dear {name}, your loan is rejected!\n with a score of {proba:.0f}".format(
+            name=user_name, proba=score * 100
         )
     else:
-        prediction = "Dear {name}, your loan is approved!\n with a score of {proba}".format(name = user_name, proba=score)
+        prediction = "Dear {name}, your loan is approved!\n with a score of {proba:.0f}".format(
+            name = user_name, proba=score * 100
+        )
 
     context = {
         "request": request,
