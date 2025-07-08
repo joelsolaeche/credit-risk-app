@@ -1,0 +1,43 @@
+# Railway Ignore File
+# Exclude unnecessary files from deployment
+
+# Datasets and large files
+dataset/
+notebooks/
+*.csv
+*.zip
+# *.pkl  # Keep model files for ML service
+*.joblib
+
+# Development files
+.git/
+.gitignore
+.env
+*.log
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Documentation
+*.md
+!RAILWAY_DEPLOYMENT.md
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Local development
+docker-compose.yml
+.env.local
+.env.development 

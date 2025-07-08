@@ -17,11 +17,18 @@ logging.basicConfig(level = logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 # Connect to Redis 
-db = redis.Redis(
-    host = os.getenv("REDIS_IP", "redis") #os.getenv('REDIS_IP')
-    ,port = os.getenv('REDIS_PORT') 
-    ,db = os.getenv('REDIS_DB_ID')
-)
+# Railway provides Redis URL, fallback to individual parameters for local development
+redis_url = os.getenv('REDIS_URL') or os.getenv('REDIS_IP')
+if redis_url and redis_url.startswith('redis://'):
+    # Use URL-based connection for Railway
+    db = redis.from_url(redis_url)
+else:
+    # Use individual parameters for local development
+    db = redis.Redis(
+        host = os.getenv("REDIS_IP", "redis"),
+        port = int(os.getenv('REDIS_PORT', 6379)),
+        db = int(os.getenv('REDIS_DB_ID', 0))
+    )
 
 
 def load_pipeline(filename):

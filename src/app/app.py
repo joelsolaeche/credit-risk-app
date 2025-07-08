@@ -41,11 +41,18 @@ logging.getLogger().addHandler(file_handler)
 current_dir = os.path.dirname(__file__)
 
 # Connect to Redis
-db = redis.Redis(
-    host = os.getenv('REDIS_IP', 'redis') #os.getenv('REDIS_IP')
-    ,port = os.getenv('REDIS_PORT') 
-    ,db = os.getenv('REDIS_DB_ID')
-)
+# Railway provides Redis URL, fallback to individual parameters for local development
+redis_url = os.getenv('REDIS_URL') or os.getenv('REDIS_IP')
+if redis_url and redis_url.startswith('redis://'):
+    # Use URL-based connection for Railway
+    db = redis.from_url(redis_url)
+else:
+    # Use individual parameters for local development
+    db = redis.Redis(
+        host = os.getenv('REDIS_IP', 'redis'),
+        port = int(os.getenv('REDIS_PORT', 6379)),
+        db = int(os.getenv('REDIS_DB_ID', 0))
+    )
 
 # Your FastAPI app
 app = FastAPI()
@@ -60,6 +67,28 @@ templates = Jinja2Templates(directory="templates")
 @app.get("/", include_in_schema=False)
 def home():
     return {"message": "Welcome to Credit Risk Analysis API!"}
+
+# Health check endpoint for Railway
+@app.get("/health", include_in_schema=False)
+def health_check():
+    """
+    Health check endpoint for Railway deployment monitoring.
+    
+    Returns:
+    - dict: Health status and service information
+    """
+    try:
+        # Test Redis connection
+        db.ping()
+        redis_status = "healthy"
+    except Exception as e:
+        redis_status = f"unhealthy: {str(e)}"
+    
+    return {
+        "status": "healthy",
+        "service": "credit-risk-api",
+        "redis": redis_status
+    }
 
 # Endpoint login
 @app.get("/login", include_in_schema=False)
