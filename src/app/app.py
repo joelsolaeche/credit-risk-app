@@ -6,6 +6,9 @@ import uuid
 from datetime import timedelta
 from typing import Union
 
+# Add imports for direct ML prediction
+import pickle
+import numpy as np
 
 import database
 import pandas as pd
@@ -39,6 +42,51 @@ logging.getLogger().addHandler(file_handler)
 
 # Current directory
 current_dir = os.path.dirname(__file__)
+
+# Load ML model for direct prediction (Railway deployment)
+def load_ml_model():
+    """Load the ML model for direct prediction."""
+    try:
+        model_path = os.path.join(current_dir, "predict_model.pkl")
+        if os.path.exists(model_path):
+            with open(model_path, "rb") as f:
+                return pickle.load(f)
+    except Exception as e:
+        logging.error(f"Error loading ML model: {e}")
+    return None
+
+# Load model at startup
+ml_model = load_ml_model()
+
+def predict_direct(data):
+    """Direct ML prediction for Railway deployment."""
+    if ml_model is None:
+        return "Unknown", 0, 0.5
+    
+    try:
+        keys_order = ["FLAG_MASTERCARD", "FLAG_RESIDENCIAL_PHONE", "FLAG_PROFESSIONAL_PHONE", "SEX", "AGE", 
+                     "MONTHS_IN_RESIDENCE", "PAYMENT_DAY", "PROFESSION_CODE", "QUANT_BANKING_ACCOUNTS", 
+                     "QUANT_DEPENDANTS", "RESIDENCE_TYPE", "RESIDENCIAL_STATE", "STATE_OF_BIRTH", 
+                     "OCCUPATION_TYPE", "MARITAL_STATUS"]
+        
+        df = pd.DataFrame([data], columns=keys_order)
+        
+        # Convert columns to appropriate types
+        float_columns = ["MONTHS_IN_RESIDENCE", "PROFESSION_CODE", "RESIDENCE_TYPE", "OCCUPATION_TYPE"]
+        df[float_columns] = df[float_columns].astype(float)
+        
+        int_columns = ["FLAG_MASTERCARD", "AGE", "PAYMENT_DAY", "QUANT_BANKING_ACCOUNTS", "QUANT_DEPENDANTS", "MARITAL_STATUS"]
+        df[int_columns] = df[int_columns].astype(int)
+        
+        prediction = ml_model.predict(df)[0]
+        probability = ml_model.predict_proba(df)[:, 0][0]
+        model_name = type(ml_model.named_steps['classifier']).__name__
+        
+        return model_name, prediction, probability
+        
+    except Exception as e:
+        logging.error(f"Error in direct prediction: {e}")
+        return "Unknown", 0, 0.5
 
 # Connect to Redis
 # Railway provides Redis URL, fallback to individual parameters for local development
@@ -84,10 +132,15 @@ def health_check():
     except Exception as e:
         redis_status = f"unhealthy: {str(e)}"
     
+    # Check ML model availability
+    model_status = "loaded" if ml_model is not None else "not loaded"
+    
     return {
         "status": "healthy",
         "service": "credit-risk-api",
-        "redis": redis_status
+        "redis": redis_status,
+        "ml_model": model_status,
+        "version": "1.0.0"
     }
 
 # Endpoint login
@@ -247,35 +300,44 @@ async def predict(
 
     ordered_values = [remaining[key] for key in keys_order]
 
-    
+    # Try Redis-based prediction first (for local development), fallback to direct prediction
+    try:
+        # Generate an id for the classification then
+        data_message = {"id": str(uuid.uuid4()), "data": ordered_values}
+        job_data = json.dumps(data_message)
+        job_id = data_message["id"]
 
-    # Generate an id for the classification then
-    data_message = {"id": str(uuid.uuid4()), "data": ordered_values}
+        # Send the job to the model service using Redis
+        db.lpush(os.getenv("REDIS_QUEUE", "service_queue"), job_data)
 
-    job_data = json.dumps(data_message)
-    job_id = data_message["id"]
+        # Wait for result model (with timeout)
+        max_wait_time = 30  # 30 seconds timeout
+        start_time = time.time()
+        
+        while time.time() - start_time < max_wait_time:
+            # Attempt to get model predictions using job_id
+            output = db.get(job_id)
 
-    # Send the job to the model service using Redis
-    db.lpush(os.getenv("REDIS_QUEUE"), job_data)
+            if output is not None:
+                # Process the result and extract prediction and score
+                output = json.loads(output.decode("utf-8"))
+                model_name = output["model_name"]
+                prediction = output["prediction"]
+                score = output["score"]
 
-    # Wait for result model
-    # Loop until we received the response from our ML model
-    while True:
-        # Attempt to get model predictions using job_id
-        output = db.get(job_id)
+                db.delete(job_id)
+                break
 
-        if output is not None:
-            # Process the result and extract prediction and score
-            output = json.loads(output.decode("utf-8"))
-            model_name = output["model_name"]
-            prediction = output["prediction"]
-            score = output["score"]
-
-            db.delete(job_id)
-            break
-
-        # Sleep some time waiting for model results
-        time.sleep(float(os.getenv('API_SLEEP')))
+            # Sleep some time waiting for model results
+            time.sleep(float(os.getenv('API_SLEEP', '0.5')))
+        else:
+            # Timeout occurred, fallback to direct prediction
+            raise Exception("Redis model service timeout")
+            
+    except Exception as e:
+        # Fallback to direct prediction for Railway deployment
+        logging.warning(f"Using direct prediction due to: {e}")
+        model_name, prediction, score = predict_direct(ordered_values)
 
     # Determine the output message
     if int(prediction) == 1:

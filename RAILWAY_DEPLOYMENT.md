@@ -10,10 +10,10 @@ This guide will help you deploy your Credit Risk Application on Railway.
 
 ## 🏗️ Application Architecture
 
-Your application consists of:
+Your application is deployed as a **single service** that includes:
 - **Web Service**: FastAPI application (main interface)
-- **Model Service**: ML prediction service
-- **Redis**: Message queue for communication between services
+- **ML Model**: Integrated prediction service (direct inference)
+- **Redis**: Optional message queue (for local development with separate services)
 
 ## 🔧 Pre-deployment Setup
 
@@ -67,14 +67,14 @@ project/
    - Choose your repository
 
 3. **Configure Services**
-   Railway will automatically detect the `railway.json` file and set up:
-   - Web service (FastAPI app)
-   - Model service (ML predictions)
-   - Redis service (message queue)
+   Railway will automatically detect the `railway.json` file and deploy:
+   - Single combined service (FastAPI app + ML model)
 
 4. **Set Environment Variables**
-   Railway will automatically configure most variables. You may need to set:
-   - `SECRET_KEY`: Generate a secure secret key
+   Railway will automatically configure most variables. Optional variables:
+   - `SECRET_KEY`: Generate a secure secret key (auto-generated if not set)
+   - `ACCESS_TOKEN_EXPIRE_MINUTES`: Token expiration (default: 60)
+   - `API_SLEEP`: Sleep time between requests (default: 0.5)
 
 ### Method 2: Railway CLI
 

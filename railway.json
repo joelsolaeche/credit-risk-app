@@ -1,43 +1,10 @@
 {
   "$schema": "https://railway.app/railway.schema.json",
-  "services": {
-    "web": {
-      "source": "src/app",
-      "build": {
-        "builder": "dockerfile",
-        "dockerfilePath": "Dockerfile"
-      },
-      "deploy": {
-        "startCommand": "uvicorn app:app --host 0.0.0.0 --port $PORT"
-      },
-      "variables": {
-        "REDIS_URL": "${{redis.REDIS_URL}}",
-        "REDIS_IP": "${{redis.REDIS_PRIVATE_URL}}",
-        "REDIS_PORT": "6379",
-        "REDIS_DB_ID": "0",
-        "REDIS_QUEUE": "service_queue",
-        "ACCESS_TOKEN_EXPIRE_MINUTES": "60",
-        "API_SLEEP": "0.5",
-        "SECRET_KEY": "${{Crypto.randomUUID()}}"
-      }
-    },
-    "model": {
-      "source": "src/models",
-      "build": {
-        "builder": "dockerfile",
-        "dockerfilePath": "Dockerfile"
-      },
-      "variables": {
-        "REDIS_URL": "${{redis.REDIS_URL}}",
-        "REDIS_IP": "${{redis.REDIS_PRIVATE_URL}}",
-        "REDIS_PORT": "6379",
-        "REDIS_DB_ID": "0",
-        "REDIS_QUEUE": "service_queue",
-        "SERVER_SLEEP": "0.1"
-      }
-    },
-    "redis": {
-      "image": "redis:7-alpine"
-    }
+  "build": {
+    "builder": "dockerfile",
+    "dockerfilePath": "Dockerfile"
+  },
+  "deploy": {
+    "startCommand": "uvicorn app:app --host 0.0.0.0 --port $PORT"
   }
 } 
