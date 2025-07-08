@@ -16,6 +16,10 @@ COPY src/app/ /app/
 # Copy the model files needed by the web service
 COPY src/models/predict_model.pkl /app/predict_model.pkl
 
+# Copy the startup script
+COPY start.sh /app/start.sh
+RUN chmod +x /app/start.sh
+
 # Expose port
 EXPOSE $PORT
 
@@ -23,5 +27,5 @@ EXPOSE $PORT
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD python3 -c "import requests; requests.get('http://localhost:${PORT:-8000}/health', timeout=5)" || exit 1
 
-# Start the web application
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000}"] 
+# Start the web application using the startup script
+CMD ["/app/start.sh"] 
