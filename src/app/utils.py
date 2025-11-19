@@ -4,8 +4,7 @@ from typing import Optional, Union
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from jose import JWTError, jwt
-from passlib.context import CryptContext
-
+from passlib.hash import bcrypt
 import os
 
 import database, models
@@ -13,10 +12,6 @@ from dotenv import load_dotenv
 
 #Load enviroment variables
 load_dotenv('.env')
-
-
-# Password hashing and verification context
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 # OAuth2 scheme for handling password bearer tokens
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
@@ -34,11 +29,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     - bool: True if the passwords match, False otherwise.
     """
     # Bcrypt has a 72-byte password limit, truncate if necessary
-    # Convert to bytes and truncate, bcrypt will handle the bytes directly
     if isinstance(plain_password, str):
-        plain_password_bytes = plain_password.encode('utf-8')[:72]
-        return pwd_context.verify(plain_password_bytes, hashed_password)
-    return pwd_context.verify(plain_password, hashed_password)
+        plain_password = plain_password.encode('utf-8')[:72]
+    return bcrypt.verify(plain_password, hashed_password)
 
 
 def get_password_hash(password: str) -> str:
@@ -52,11 +45,9 @@ def get_password_hash(password: str) -> str:
     - str: The hashed password.
     """
     # Bcrypt has a 72-byte password limit, truncate if necessary
-    # Convert to bytes and truncate, bcrypt will handle the bytes directly
     if isinstance(password, str):
-        password_bytes = password.encode('utf-8')[:72]
-        return pwd_context.hash(password_bytes)
-    return pwd_context.hash(password)
+        password = password.encode('utf-8')[:72]
+    return bcrypt.hash(password)
 
 
 def get_user(db: dict, username: str) -> models.UserInDB:

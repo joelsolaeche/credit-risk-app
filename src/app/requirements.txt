@@ -11,8 +11,8 @@ Markdown
 termcolor
 python-multipart
 python-jose[cryptography]
-passlib[bcrypt]
-bcrypt>=4.0.0
+bcrypt==4.1.2
+passlib==1.7.4
 requests
 python-dotenv
 xgboost
