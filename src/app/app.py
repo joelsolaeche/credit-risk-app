@@ -183,7 +183,7 @@ async def login_for_access_token(
             "login.html", {"request": request, "error_message": error_message}
         )
 
-    access_token_expires = timedelta(minutes = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES'))) #settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes = int(os.getenv('ACCESS_TOKEN_EXPIRE_MINUTES', '60')))
     access_token = utils.create_access_token(
         data={"sub": user.username}, expires_delta=access_token_expires
     )
