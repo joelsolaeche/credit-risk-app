@@ -26,10 +26,11 @@ REDIS_URL=redis://...
 REDIS_QUEUE=service_queue
 
 # Application Settings
+SECRET_KEY=your-secret-key-here
+ALGORITHM=HS256
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 API_SLEEP=0.5
 SERVER_SLEEP=0.1
-SECRET_KEY=your-secret-key-here
 ```
 
 ### 2. File Structure
@@ -71,8 +72,9 @@ project/
    - Single combined service (FastAPI app + ML model)
 
 4. **Set Environment Variables**
-   Railway will automatically configure most variables. Optional variables:
-   - `SECRET_KEY`: Generate a secure secret key (auto-generated if not set)
+   Railway will automatically configure most variables. Required variables:
+   - `SECRET_KEY`: Generate a secure secret key for JWT tokens
+   - `ALGORITHM`: JWT algorithm (default: HS256)
    - `ACCESS_TOKEN_EXPIRE_MINUTES`: Token expiration (default: 60)
    - `API_SLEEP`: Sleep time between requests (default: 0.5)
 

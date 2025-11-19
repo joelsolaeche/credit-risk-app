@@ -33,6 +33,9 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     Returns:
     - bool: True if the passwords match, False otherwise.
     """
+    # Bcrypt has a 72-byte password limit, truncate if necessary
+    if isinstance(plain_password, str):
+        plain_password = plain_password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
     return pwd_context.verify(plain_password, hashed_password)
 
 
@@ -46,6 +49,9 @@ def get_password_hash(password: str) -> str:
     Returns:
     - str: The hashed password.
     """
+    # Bcrypt has a 72-byte password limit, truncate if necessary
+    if isinstance(password, str):
+        password = password.encode('utf-8')[:72].decode('utf-8', errors='ignore')
     return pwd_context.hash(password)
 
 
@@ -103,7 +109,9 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
         expire = datetime.utcnow() + timedelta(minutes=15)
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(
-        to_encode, os.getenv('SECRET_KEY'), algorithm = os.getenv('ALGORITHM')    #settings.SECRET_KEY, algorithm=settings.ALGORITHM
+        to_encode, 
+        os.getenv('SECRET_KEY', 'default-secret-key-change-in-production'), 
+        algorithm=os.getenv('ALGORITHM', 'HS256')
     )
 
     return encoded_jwt
@@ -129,7 +137,9 @@ async def get_current_user(token: str = Depends(oauth2_scheme)) -> models.UserIn
     )
     try:
         payload = jwt.decode(
-            token, os.getenv('SECRET_KEY'), algorithms=[os.getenv('ALGORITHM')]
+            token, 
+            os.getenv('SECRET_KEY', 'default-secret-key-change-in-production'), 
+            algorithms=[os.getenv('ALGORITHM', 'HS256')]
         )
         username: str = payload.get("sub")
         if username is None:
